@@ -1565,7 +1565,7 @@ interface Repository {
   name: string;
   description: string;
   html_url: string;
-  language: string;
+  language: any;
   stargazers_count: number;
   topics: string[];
 }
