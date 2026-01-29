@@ -30,7 +30,10 @@
     <!-- Open Graph (Facebook, LinkedIn, Discord, etc.) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Arezki Cherfouh Portfolio" />
-    <meta property="og:title" content="Arezki Cherfouh – Full-Stack Developer & AI Engineer" />
+    <meta
+      property="og:title"
+      content="Arezki Cherfouh – Full-Stack Developer & AI Engineer"
+    />
     <meta
       property="og:description"
       content="Explore projects, skills, and open-source work by Arezki Cherfouh, a full-stack developer and AI engineer building modern, scalable applications."
@@ -44,37 +47,42 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Arezki Cherfouh – Developer Portfolio" />
+    <meta
+      name="twitter:title"
+      content="Arezki Cherfouh – Developer Portfolio"
+    />
     <meta
       name="twitter:description"
       content="Full-stack developer and AI engineer. Python, JavaScript, Node.js, FastAPI, and scalable AI systems."
     />
-    <meta name="twitter:image" content="/icon.png" />
-    <meta name="twitter:image:alt" content="Arezki Cherfouh Portfolio Preview" />
+    <meta name="twitter:image" content="/favicon.ico" />
+    <meta
+      name="twitter:image:alt"
+      content="Arezki Cherfouh Portfolio Preview"
+    />
 
     <script>
-    (function () {
-      try {
-        var theme;
-          theme = window.matchMedia('(prefers-color-scheme: dark)').matches
-            ? 'dark'
-            : 'light';
+      (function () {
+        try {
+          var theme;
+          theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
 
-        var root = document.documentElement;
+          var root = document.documentElement;
 
-        if (theme === 'dark') {
-          root.classList.add('dark');
-          root.classList.remove('light');
-        } else {
-          root.classList.add('light');
-          root.classList.remove('dark');
-        }
+          if (theme === "dark") {
+            root.classList.add("dark");
+            root.classList.remove("light");
+          } else {
+            root.classList.add("light");
+            root.classList.remove("dark");
+          }
 
-        root.style.colorScheme = theme;
-      } catch (e) {}
-    })();
+          root.style.colorScheme = theme;
+        } catch (e) {}
+      })();
     </script>
-
   </head>
   <body>
     <div id="root"></div>
