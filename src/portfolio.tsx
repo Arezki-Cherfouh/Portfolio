@@ -379,16 +379,18 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = 'about' }) => {
   const skills = [
     { name: 'Python', level: 95, icon: '🐍' },
     { name: 'JavaScript', level: 90, icon: '⚡' },
+    { name: 'TypeScript', level: 90, icon: '⚡' },
+    { name: 'C++', level: 85, icon: '⚡' },
     { name: 'FastAPI', level: 85, icon: '🚀' },
     { name: 'Node.js', level: 85, icon: '💚' },
-    { name: 'PostgreSQL', level: 80, icon: '🐘' },
+    { name: 'PostgreSQL', level: 90, icon: '🐘' },
     { name: 'React', level: 85, icon: '⚛️' },
     { name: 'React Native', level: 80, icon: '📱' },
     { name: 'HTML/CSS', level: 95, icon: '🎨' },
     { name: 'Tailwind CSS', level: 90, icon: '💨' },
     { name: 'Bootstrap', level: 85, icon: '🅱️' },
     { name: 'System Design', level: 75, icon: '🏗️' },
-    { name: 'AI/ML', level: 70, icon: '🤖' }
+    { name: 'AI/ML', level: 75, icon: '🤖' }
   ];
 
   const filteredRepos = repos.filter(repo =>
