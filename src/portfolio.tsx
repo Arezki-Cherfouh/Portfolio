@@ -1069,7 +1069,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = 'about' }) => {
                   that <strong style={{ color: 'var(--accent-primary)' }}>help people without distraction</strong>.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
-                  I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, JavaScript, FastAPI, Node.js, SQL (PostgreSQL), 
+                  I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, C++, JavaScript/TypeScript, FastAPI, Node.js, SQL (PostgreSQL), 
                   ReactJS/React Native, HTML/CSS, Tailwind CSS & Bootstrap</strong>, with growing experience in system design and AI.
                 </p>
                 <p style={{ marginBottom: '16px' }}>
