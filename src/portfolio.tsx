@@ -379,8 +379,8 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = 'about' }) => {
   const skills = [
     { name: 'Python', level: 95, icon: '🐍' },
     { name: 'JavaScript', level: 90, icon: '⚡' },
-    { name: 'TypeScript', level: 90, icon: '⚡' },
-    { name: 'C++', level: 85, icon: '⚡' },
+    { name: 'TypeScript', level: 90, icon: '📘' },
+    { name: 'C++', level: 85, icon: '⚙️' },
     { name: 'FastAPI', level: 85, icon: '🚀' },
     { name: 'Node.js', level: 85, icon: '💚' },
     { name: 'PostgreSQL', level: 90, icon: '🐘' },
