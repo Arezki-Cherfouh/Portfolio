@@ -221,7 +221,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = 'about' }) => {
               <div style={{ position: 'relative' }}>
                 <div
                   onClick={handlePfpClick}
-                  className={`pfp-container profile-picture-container ${isPlaying ? 'pfp-playing' : 'pulse-glow'}`}
+                  className={`pfp-container profile-picture-container cursor-pointer ${isPlaying ? 'pfp-playing' : 'pulse-glow'}`}
                   title={isPlaying ? 'Click to stop music' : 'Click to play music'}
                   style={{ width: '200px', height: '200px', borderRadius: '50%', border: '4px solid var(--accent-primary)', padding: '8px', background: `linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary))` }}
                 >
