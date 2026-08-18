@@ -1,483 +1,108 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLocation, Link } from "react-router-dom";
-import {
-  Github,
-  Linkedin,
-  ExternalLink,
-  Mail,
-  Code2,
-  Sparkles,
-  Terminal,
-  Cpu,
-} from "lucide-react";
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+import { Github, Linkedin, ExternalLink, Mail, Code2, Sparkles, Terminal, Cpu } from 'lucide-react';
 
-interface Repository {
-  name: string;
-  description: string;
-  html_url: string;
-  language: any;
-  stargazers_count: number;
-  topics: string[];
-}
-interface PortfolioProps {
-  initialTab?: string;
-}
+interface Repository { name: string; description: string; html_url: string; language: any; stargazers_count: number; topics: string[]; }
+interface PortfolioProps { initialTab?: string; }
 
-const Portfolio: React.FC<PortfolioProps> = ({ initialTab = "about" }) => {
+const Portfolio: React.FC<PortfolioProps> = ({ initialTab = 'about' }) => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(initialTab);
   const [repos, setRepos] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    audioRef.current = new Audio("/assets/ost.mp3");
+    audioRef.current = new Audio('/assets/ost.mp3');
     audioRef.current.loop = true;
-    return () => {
-      audioRef.current?.pause();
-      audioRef.current = null;
-    };
+    return () => { audioRef.current?.pause(); audioRef.current = null; };
   }, []);
 
   const handlePfpClick = () => {
     if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play();
-      setIsPlaying(true);
-    }
+    if (isPlaying) { audioRef.current.pause(); setIsPlaying(false); }
+    else { audioRef.current.play(); setIsPlaying(true); }
   };
 
-  useEffect(() => {
-    const path = location.pathname.slice(1) || "about";
-    if (["about", "projects", "skills", "contact"].includes(path)) {
-      setActiveTab(path);
-    }
-  }, [location]);
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [activeTab]);
+  useEffect(() => { const path = location.pathname.slice(1) || 'about'; if (['about', 'projects', 'skills', 'contact'].includes(path)) { setActiveTab(path); } }, [location]);
+  useEffect(() => { window.scrollTo(0, 0); }, [activeTab]);
 
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await fetch(
-          "https://api.github.com/users/Arezki-Cherfouh/repos?per_page=100&sort=updated",
-        );
+        const response = await fetch('https://api.github.com/users/Arezki-Cherfouh/repos?per_page=100&sort=updated');
         const data = await response.json();
         setRepos(data);
+        // console.log(data.map((r: any) => `${r.name} (${r.language}): ${r.html_url}\n${r.description}`).join('\n\n'));
       } catch (error) {
-        console.error("Error fetching repos:", error);
+        console.error('Error fetching repos:', error);
         setRepos([
-          {
-            name: "Focused-Students",
-            description:
-              "Real-time student focus and hand-raise detection using OpenCV and MediaPipe Pose. The system tracks posture, head orientation, eye alignment, and slumping to classify attention as Focused or Distracted, draws bounding boxes, detects raised hands, and runs live from a webcam for classroom monitoring.",
-            html_url: "https://github.com/Arezki-Cherfouh/Focused-Students",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "3D-Hand-Controller",
-            description:
-              "Futuristic 3D Hand Controller uses MediaPipe and OpenGL to track hand gestures via webcam, enabling real-time manipulation of 3D wireframe shapes. Zoom, rotate, move, and switch shapes or neon colors with intuitive gestures, creating an interactive, visually immersive experience.",
-            html_url: "https://github.com/Arezki-Cherfouh/3D-Hand-Controller",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Ollama-Models",
-            description:
-              "This repository demonstrates an autonomous Python agent using the Ollama LLaMA 3.2 3B model. It interacts with the user, decides actions, executes shell commands, and maintains memory. The goal is to autonomously create a script.py file and finish execution, showcasing AI-driven task automation.",
-            html_url: "https://github.com/Arezki-Cherfouh/Ollama-Models",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Bank-Notes",
-            description:
-              "Machine learning project that classifies banknotes as authentic or counterfeit using multiple algorithms. Implements SVM, KNN, Perceptron, and Naive Bayes on the same dataset, compares accuracy, and demonstrates a clean end-to-end ML workflow with training, testing, and evaluation.",
-            html_url: "https://github.com/Arezki-Cherfouh/Bank-Notes",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Mall-Customers",
-            description:
-              "Customer segmentation project using K-Means clustering on mall customer data. Scales features, evaluates optimal cluster count with elbow and silhouette methods, visualizes clusters in 2D and 3D, analyzes cluster characteristics, and exports labeled data for further business analysis.",
-            html_url: "https://github.com/Arezki-Cherfouh/Mall-Customers",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Nuclear-Reaction",
-            description:
-              "Interactive nuclear fission simulator using hand tracking with MediaPipe and OpenCV. Simulate U-235 reacting with neutrons, visualize energy release, particle products, and allow real-time manipulation of atoms and neutrons via pinch gestures. Educational and visually dynamic.",
-            html_url: "https://github.com/Arezki-Cherfouh/Nuclear-Reaction",
-            language: "HTML",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Coach",
-            description:
-              "Real-time exercise tracking using OpenCV and MediaPipe Pose. This project detects and counts squats, pushups, situps, and arm lifts through webcam input by analyzing joint angles and body posture. It displays live pose landmarks and accurate rep counters on screen with no extra hardware.",
-            html_url: "https://github.com/Arezki-Cherfouh/Coach",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Binary-Search-sqrt",
-            description:
-              "Python script that calculates square root of any number int or float using binary search",
-            html_url: "https://github.com/Arezki-Cherfouh/Binary-Search-sqrt",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Local-Search",
-            description:
-              "Local search optimization project that places hospitals on a grid to minimize total distance to houses. Uses hill climbing with random restarts, Manhattan distance cost evaluation, and visual output generation to demonstrate optimization behavior and convergence in a clear, educational way.",
-            html_url: "https://github.com/Arezki-Cherfouh/Local-Search",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Scheduling",
-            description:
-              "Python constraint programming example for course scheduling using the python-constraint library. Assigns time slots to courses while enforcing rules like no overlaps, day restrictions, and morning-only classes. Generates and prints all valid schedules, making it a clear introduction to constraint satisfaction problems.",
-            html_url: "https://github.com/Arezki-Cherfouh/Scheduling",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Tic-Tac-Toe",
-            description:
-              "Modern Tic Tac Toe game built with Python and Pygame, featuring an unbeatable Minimax AI with alpha-beta pruning. Includes a clean UI, animated win lines, game stats, alternating first player, and restart system. Great demo of classic game AI and Pygame fundamentals.",
-            html_url: "https://github.com/Arezki-Cherfouh/Tic-Tac-Toe",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Random-Forests",
-            description:
-              "End-to-end machine learning projects using real tabular data. Includes a Random Forest model for student grade prediction and a Decision Tree classifier for loan approval analysis, featuring preprocessing, feature engineering, evaluation metrics, and advanced visualizations.",
-            html_url: "https://github.com/Arezki-Cherfouh/Random-Forests",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Optimization",
-            description:
-              "Python example showing how to solve a linear programming problem using scipy.optimize.linprog. It minimizes production cost with labor and output constraints, defines objective coefficients, inequality matrices, bounds, and prints the optimal solution if feasible. Useful as a simple reference for optimization beginners. Simple and easy to adapt Now",
-            html_url: "https://github.com/Arezki-Cherfouh/Optimization",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Markov-Baye",
-            description:
-              "Comprehensive probabilistic modeling project using Markov Chains and Bayesian Networks with pgmpy. Includes weather prediction, text generation, medical diagnosis, alarm reasoning, sampling, and a preference-based decision model, demonstrating inference, uncertainty handling, and probabilistic reasoning end to end.",
-            html_url: "https://github.com/Arezki-Cherfouh/Markov-Baye",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "RL-Games",
-            description:
-              "Interactive reinforcement learning demos using Python and Pygame. Includes a Nim game with a Q-learning AI that learns optimal moves through training, and a Grid World environment where an agent learns to reach a goal while avoiding obstacles. Designed for visualizing and understanding Q-learning concepts in practice.",
-            html_url: "https://github.com/Arezki-Cherfouh/RL-Games",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Maze",
-            description:
-              "A Python maze solver demonstrating classic AI search algorithms. The program reads a text-based maze, finds a path from start to goal using DFS, BFS, Greedy Best-First, and A* search, prints the solution in the terminal, and generates visual images showing explored cells and final paths for algorithm comparison.",
-            html_url: "https://github.com/Arezki-Cherfouh/Maze",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Deploy-Github-Repos",
-            description:
-              "Automates GitHub repo creation and content upload. Reads all folders in a local directory, generates (or finds existing) repos using folder names, sets descriptions from README or defaults, initializes git, commits files, and pushes to GitHub — fully automating deployment of multiple projects.",
-            html_url: "https://github.com/Arezki-Cherfouh/Deploy-Github-Repos",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Arezki-Cherfouh",
-            description:
-              "Founder & CEO of Qwerify | SWE | Aspiring AI Engineer | Building Scalable Systems, Technology & AI Projects that Help People Without Distraction",
-            html_url: "https://github.com/Arezki-Cherfouh/Arezki-Cherfouh",
-            language: null,
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "SQL-Python",
-            description:
-              "Python script demonstrating PostgreSQL connection pooling with psycopg2. Includes functions to initialize a database, insert sample movie records, and query movies by year or top-rated. Efficient and safe connection handling with a threaded pool.",
-            html_url: "https://github.com/Arezki-Cherfouh/SQL-Python",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Video-Downloader",
-            description:
-              "A simple video downloader that supports YouTube and some other platforms built with Python. Provides both a terminal-based version and a Tkinter GUI. Supports video and audio downloads using yt-dlp, with real-time progress updates and customizable save paths.",
-            html_url: "https://github.com/Arezki-Cherfouh/Video-Downloader",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Live-Face-Detector",
-            description:
-              "A real-time face detection application using OpenCV. Captures webcam video, detects faces with Haar cascades, and outlines them dynamically with red polygons. Lightweight and fast, it provides an interactive demonstration of computer vision face detection and visualization and shows mood,age and gender.",
-            html_url: "https://github.com/Arezki-Cherfouh/Live-Face-Detector",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "DeepSeek-Assistant",
-            description:
-              "A voice-enabled AI chat assistant combining Vosk for offline speech recognition and DeepSeek API for responses. Captures real-time speech, transcribes it, sends queries to DeepSeek, and reads AI replies aloud using pyttsx3. Fully interactive, cross-platform, and continuously conversational.",
-            html_url: "https://github.com/Arezki-Cherfouh/DeepSeek-Assistant",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Speech-To-Text-Vosk",
-            description:
-              "A Python script using Vosk and PyAudio to capture live microphone input and convert speech to text. Implements a timeout for detecting pauses in speech and saves the recognized text to a file. Simple, offline, and real-time speech recognition solution.",
-            html_url: "https://github.com/Arezki-Cherfouh/Speech-To-Text-Vosk",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Face-Marker",
-            description:
-              "A Python tool to detect and mark faces in images. Uses OpenCV's Haar cascade for face detection and Pillow to draw rectangles around faces. Supports opening images via file dialog, visualizing detected faces, and saving the annotated images in multiple formats. Provides both a terminal-based version and a Tkinter GUI",
-            html_url: "https://github.com/Arezki-Cherfouh/Face-Marker",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "SpamStorm",
-            description: "SpamStorm - The Ultimate Message Flooder",
-            html_url: "https://github.com/Arezki-Cherfouh/SpamStorm",
-            language: "Python",
-            stargazers_count: 4,
-            topics: [],
-          },
-          {
-            name: "Face-Recognizer",
-            description:
-              "A Python script for face verification using the face_recognition library. Compares a known image with an unknown image by encoding facial features and outputs whether they belong to the same person. Simple, accurate, and easy-to-use face matching demo.",
-            html_url: "https://github.com/Arezki-Cherfouh/Face-Recognizer",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Password-Generator",
-            description:
-              "A Python GUI password generator built with Tkinter. Offers strong (secure) and random password options, lets users specify length, and displays generated passwords in the interface. Supports letters, digits, and symbols for robust password creation. Provides both a terminal-based version and a Tkinter GUI",
-            html_url: "https://github.com/Arezki-Cherfouh/Password-Generator",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "QR-Code-Generator",
-            description:
-              "A Python tool to generate QR codes using the qrcode library. Users can input text or URLs, create QR codes with high error correction, and save them in multiple image formats via an interactive Tkinter interface. Simple, fast, and user-friendly QR code generation. Provides both a terminal-based version and a Tkinter GUI",
-            html_url: "https://github.com/Arezki-Cherfouh/QR-Code-Generator",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Turtle-Shapes",
-            description:
-              "Python turtle script that draws multiple filled shapes: a green triangle, blue circle, gray rectangle, yellow square, and a red heart. Each shape is positioned individually, filled with color, and a parametric heart drawing is included but commented out.",
-            html_url: "https://github.com/Arezki-Cherfouh/Turtle-Shapes",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "py-to-exe-sh",
-            description:
-              "Lightweight Python project auto-builder. Scans all subfolders, detects .py files, and converts each into standalone .exe and .sh apps using PyInstaller. GUI scripts build without console, others with it. Outputs executables and launch scripts in their original folders — clean, fast, and self-contained.",
-            html_url: "https://github.com/Arezki-Cherfouh/py-to-exe-sh",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Create-Github-Repos",
-            description:
-              "Automates GitHub repo creation and content upload. Reads all folders in a local directory, generates repos using folder names, sets descriptions from README or defaults, initializes git, commits files, and pushes to GitHub — fully automating deployment of multiple projects.",
-            html_url: "https://github.com/Arezki-Cherfouh/Create-Github-Repos",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Image-Resizer",
-            description:
-              "A Python GUI tool to resize images easily. Users can specify custom height and width, select an image via file dialog, and save the resized version in multiple formats. Built with Tkinter and Pillow, it provides a simple and interactive interface for quick image resizing tasks.",
-            html_url: "https://github.com/Arezki-Cherfouh/Image-Resizer",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "File-Organizer",
-            description:
-              "A Python GUI tool to automatically organize files in a directory. Sorts videos, images, audio, documents, and other files into corresponding folders, while also moving subdirectories into a dedicated Folders folder. Simple, efficient, and easy-to-use file management solution.",
-            html_url: "https://github.com/Arezki-Cherfouh/File-Organizer",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "CryptGuard",
-            description:
-              "CryptGuard - Secure file encryption tool using AES-128. Encrypt/decrypt files with one click. For Windows. Standalone EXE, no install needed. Share files safely with military-grade encryption. Open-source (GPL-3.0).",
-            html_url: "https://github.com/Arezki-Cherfouh/CryptGuard",
-            language: "Python",
-            stargazers_count: 3,
-            topics: [],
-          },
-          {
-            name: "Emailer",
-            description:
-              "A multi-service email sender in Python that sends messages via Gmail SMTP, Gmail API, Brevo, Mailjet, and SendGrid. Automatically falls back if one service fails, enabling reliable delivery of HTML emails to any recipient while demonstrating integration with multiple email APIs.",
-            html_url: "https://github.com/Arezki-Cherfouh/Emailer",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Password-Hashing",
-            description:
-              "A simple Python script to hash passwords securely using Passlib. Supports Argon2 and bcrypt algorithms, allowing users to input passwords and receive strong, hashed outputs suitable for safe storage and authentication systems.",
-            html_url: "https://github.com/Arezki-Cherfouh/Password-Hashing",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Timer",
-            description:
-              "Python countdown timer supporting HH:MM:SS or seconds input. Plays a custom audio alert when time is up. Built with pygame for sound playback and simple console interface for easy timer setup.",
-            html_url: "https://github.com/Arezki-Cherfouh/Timer",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "Smart-File-Reader",
-            description:
-              "A cross-platform Tkinter app that reads text from PDFs, HTML, DOCX, CSV/XLSX, and images (OCR) aloud using TTS. Supports multiple encodings, handles unsupported file types gracefully, and provides a simple GUI for choosing files to read.",
-            html_url: "https://github.com/Arezki-Cherfouh/Smart-File-Reader",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "School-Physics",
-            description:
-              "A FastAPI app that fetches images from school Physics Telegram group, uploads them to IMGBB, caches metadata on GitHub, and displays a scrollable web gallery. Supports captions, sender info, and automatic cache updates for efficient image management and viewing.",
-            html_url: "https://github.com/Arezki-Cherfouh/School-Physics",
-            language: "Python",
-            stargazers_count: 1,
-            topics: [],
-          },
-          {
-            name: "NoteMaster",
-            description:
-              "NoteMaster calcule vos moyennes scolaires en un clic. Sélectionnez votre niveau, entrez vos notes (devoirs, évaluations, TP, compositions) et leurs coefficients, et obtenez instantanément vos résultats. Parfait pour le primaire, collège et lycée. Simple, précis, efficace.",
-            html_url: "https://github.com/Arezki-Cherfouh/NoteMaster",
-            language: "Python",
-            stargazers_count: 3,
-            topics: [],
-          },
+          { "name": "Focused-Students", "description": "Real-time student focus and hand-raise detection using OpenCV and MediaPipe Pose. The system tracks posture, head orientation, eye alignment, and slumping to classify attention as Focused or Distracted, draws bounding boxes, detects raised hands, and runs live from a webcam for classroom monitoring.", "html_url": "https://github.com/Arezki-Cherfouh/Focused-Students", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "3D-Hand-Controller", "description": "Futuristic 3D Hand Controller uses MediaPipe and OpenGL to track hand gestures via webcam, enabling real-time manipulation of 3D wireframe shapes. Zoom, rotate, move, and switch shapes or neon colors with intuitive gestures, creating an interactive, visually immersive experience.", "html_url": "https://github.com/Arezki-Cherfouh/3D-Hand-Controller", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Ollama-Models", "description": "This repository demonstrates an autonomous Python agent using the Ollama LLaMA 3.2 3B model. It interacts with the user, decides actions, executes shell commands, and maintains memory. The goal is to autonomously create a script.py file and finish execution, showcasing AI-driven task automation.", "html_url": "https://github.com/Arezki-Cherfouh/Ollama-Models", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Bank-Notes", "description": "Machine learning project that classifies banknotes as authentic or counterfeit using multiple algorithms. Implements SVM, KNN, Perceptron, and Naive Bayes on the same dataset, compares accuracy, and demonstrates a clean end-to-end ML workflow with training, testing, and evaluation.", "html_url": "https://github.com/Arezki-Cherfouh/Bank-Notes", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Mall-Customers", "description": "Customer segmentation project using K-Means clustering on mall customer data. Scales features, evaluates optimal cluster count with elbow and silhouette methods, visualizes clusters in 2D and 3D, analyzes cluster characteristics, and exports labeled data for further business analysis.", "html_url": "https://github.com/Arezki-Cherfouh/Mall-Customers", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Nuclear-Reaction", "description": "Interactive nuclear fission simulator using hand tracking with MediaPipe and OpenCV. Simulate U-235 reacting with neutrons, visualize energy release, particle products, and allow real-time manipulation of atoms and neutrons via pinch gestures. Educational and visually dynamic.", "html_url": "https://github.com/Arezki-Cherfouh/Nuclear-Reaction", "language": "HTML", "stargazers_count": 1, "topics": [] },
+          { "name": "Coach", "description": "Real-time exercise tracking using OpenCV and MediaPipe Pose. This project detects and counts squats, pushups, situps, and arm lifts through webcam input by analyzing joint angles and body posture. It displays live pose landmarks and accurate rep counters on screen with no extra hardware.", "html_url": "https://github.com/Arezki-Cherfouh/Coach", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Binary-Search-sqrt", "description": "Python script that calculates square root of any number int or float using binary search", "html_url": "https://github.com/Arezki-Cherfouh/Binary-Search-sqrt", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Local-Search", "description": "Local search optimization project that places hospitals on a grid to minimize total distance to houses. Uses hill climbing with random restarts, Manhattan distance cost evaluation, and visual output generation to demonstrate optimization behavior and convergence in a clear, educational way.", "html_url": "https://github.com/Arezki-Cherfouh/Local-Search", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Scheduling", "description": "Python constraint programming example for course scheduling using the python-constraint library. Assigns time slots to courses while enforcing rules like no overlaps, day restrictions, and morning-only classes. Generates and prints all valid schedules, making it a clear introduction to constraint satisfaction problems.", "html_url": "https://github.com/Arezki-Cherfouh/Scheduling", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Tic-Tac-Toe", "description": "Modern Tic Tac Toe game built with Python and Pygame, featuring an unbeatable Minimax AI with alpha-beta pruning. Includes a clean UI, animated win lines, game stats, alternating first player, and restart system. Great demo of classic game AI and Pygame fundamentals.", "html_url": "https://github.com/Arezki-Cherfouh/Tic-Tac-Toe", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Random-Forests", "description": "End-to-end machine learning projects using real tabular data. Includes a Random Forest model for student grade prediction and a Decision Tree classifier for loan approval analysis, featuring preprocessing, feature engineering, evaluation metrics, and advanced visualizations.", "html_url": "https://github.com/Arezki-Cherfouh/Random-Forests", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Optimization", "description": "Python example showing how to solve a linear programming problem using scipy.optimize.linprog. It minimizes production cost with labor and output constraints, defines objective coefficients, inequality matrices, bounds, and prints the optimal solution if feasible. Useful as a simple reference for optimization beginners. Simple and easy to adapt Now", "html_url": "https://github.com/Arezki-Cherfouh/Optimization", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Markov-Baye", "description": "Comprehensive probabilistic modeling project using Markov Chains and Bayesian Networks with pgmpy. Includes weather prediction, text generation, medical diagnosis, alarm reasoning, sampling, and a preference-based decision model, demonstrating inference, uncertainty handling, and probabilistic reasoning end to end.", "html_url": "https://github.com/Arezki-Cherfouh/Markov-Baye", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "RL-Games", "description": "Interactive reinforcement learning demos using Python and Pygame. Includes a Nim game with a Q-learning AI that learns optimal moves through training, and a Grid World environment where an agent learns to reach a goal while avoiding obstacles. Designed for visualizing and understanding Q-learning concepts in practice.", "html_url": "https://github.com/Arezki-Cherfouh/RL-Games", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Maze", "description": "A Python maze solver demonstrating classic AI search algorithms. The program reads a text-based maze, finds a path from start to goal using DFS, BFS, Greedy Best-First, and A* search, prints the solution in the terminal, and generates visual images showing explored cells and final paths for algorithm comparison.", "html_url": "https://github.com/Arezki-Cherfouh/Maze", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Deploy-Github-Repos", "description": "Automates GitHub repo creation and content upload. Reads all folders in a local directory, generates (or finds existing) repos using folder names, sets descriptions from README or defaults, initializes git, commits files, and pushes to GitHub — fully automating deployment of multiple projects.", "html_url": "https://github.com/Arezki-Cherfouh/Deploy-Github-Repos", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Arezki-Cherfouh", "description": "Founder & CEO of Qwerify | SWE | Aspiring AI Engineer | Building Scalable Systems, Technology & AI Projects that Help People Without Distraction", "html_url": "https://github.com/Arezki-Cherfouh/Arezki-Cherfouh", "language": null, "stargazers_count": 1, "topics": [] },
+          { "name": "SQL-Python", "description": "Python script demonstrating PostgreSQL connection pooling with psycopg2. Includes functions to initialize a database, insert sample movie records, and query movies by year or top-rated. Efficient and safe connection handling with a threaded pool.", "html_url": "https://github.com/Arezki-Cherfouh/SQL-Python", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Video-Downloader", "description": "A simple video downloader that supports YouTube and some other platforms built with Python. Provides both a terminal-based version and a Tkinter GUI. Supports video and audio downloads using yt-dlp, with real-time progress updates and customizable save paths.", "html_url": "https://github.com/Arezki-Cherfouh/Video-Downloader", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Live-Face-Detector", "description": "A real-time face detection application using OpenCV. Captures webcam video, detects faces with Haar cascades, and outlines them dynamically with red polygons. Lightweight and fast, it provides an interactive demonstration of computer vision face detection and visualization and shows mood,age and gender.", "html_url": "https://github.com/Arezki-Cherfouh/Live-Face-Detector", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "DeepSeek-Assistant", "description": "A voice-enabled AI chat assistant combining Vosk for offline speech recognition and DeepSeek API for responses. Captures real-time speech, transcribes it, sends queries to DeepSeek, and reads AI replies aloud using pyttsx3. Fully interactive, cross-platform, and continuously conversational.", "html_url": "https://github.com/Arezki-Cherfouh/DeepSeek-Assistant", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Speech-To-Text-Vosk", "description": "A Python script using Vosk and PyAudio to capture live microphone input and convert speech to text. Implements a timeout for detecting pauses in speech and saves the recognized text to a file. Simple, offline, and real-time speech recognition solution.", "html_url": "https://github.com/Arezki-Cherfouh/Speech-To-Text-Vosk", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Face-Marker", "description": "A Python tool to detect and mark faces in images. Uses OpenCV's Haar cascade for face detection and Pillow to draw rectangles around faces. Supports opening images via file dialog, visualizing detected faces, and saving the annotated images in multiple formats. Provides both a terminal-based version and a Tkinter GUI", "html_url": "https://github.com/Arezki-Cherfouh/Face-Marker", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "SpamStorm", "description": "SpamStorm - The Ultimate Message Flooder", "html_url": "https://github.com/Arezki-Cherfouh/SpamStorm", "language": "Python", "stargazers_count": 4, "topics": [] },
+          { "name": "Face-Recognizer", "description": "A Python script for face verification using the face_recognition library. Compares a known image with an unknown image by encoding facial features and outputs whether they belong to the same person. Simple, accurate, and easy-to-use face matching demo.", "html_url": "https://github.com/Arezki-Cherfouh/Face-Recognizer", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Password-Generator", "description": "A Python GUI password generator built with Tkinter. Offers strong (secure) and random password options, lets users specify length, and displays generated passwords in the interface. Supports letters, digits, and symbols for robust password creation. Provides both a terminal-based version and a Tkinter GUI", "html_url": "https://github.com/Arezki-Cherfouh/Password-Generator", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "QR-Code-Generator", "description": "A Python tool to generate QR codes using the qrcode library. Users can input text or URLs, create QR codes with high error correction, and save them in multiple image formats via an interactive Tkinter interface. Simple, fast, and user-friendly QR code generation. Provides both a terminal-based version and a Tkinter GUI", "html_url": "https://github.com/Arezki-Cherfouh/QR-Code-Generator", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Turtle-Shapes", "description": "Python turtle script that draws multiple filled shapes: a green triangle, blue circle, gray rectangle, yellow square, and a red heart. Each shape is positioned individually, filled with color, and a parametric heart drawing is included but commented out.", "html_url": "https://github.com/Arezki-Cherfouh/Turtle-Shapes", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "py-to-exe-sh", "description": "Lightweight Python project auto-builder. Scans all subfolders, detects .py files, and converts each into standalone .exe and .sh apps using PyInstaller. GUI scripts build without console, others with it. Outputs executables and launch scripts in their original folders — clean, fast, and self-contained.", "html_url": "https://github.com/Arezki-Cherfouh/py-to-exe-sh", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Create-Github-Repos", "description": "Automates GitHub repo creation and content upload. Reads all folders in a local directory, generates repos using folder names, sets descriptions from README or defaults, initializes git, commits files, and pushes to GitHub — fully automating deployment of multiple projects.", "html_url": "https://github.com/Arezki-Cherfouh/Create-Github-Repos", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Image-Resizer", "description": "A Python GUI tool to resize images easily. Users can specify custom height and width, select an image via file dialog, and save the resized version in multiple formats. Built with Tkinter and Pillow, it provides a simple and interactive interface for quick image resizing tasks.", "html_url": "https://github.com/Arezki-Cherfouh/Image-Resizer", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "File-Organizer", "description": "A Python GUI tool to automatically organize files in a directory. Sorts videos, images, audio, documents, and other files into corresponding folders, while also moving subdirectories into a dedicated Folders folder. Simple, efficient, and easy-to-use file management solution.", "html_url": "https://github.com/Arezki-Cherfouh/File-Organizer", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "CryptGuard", "description": "CryptGuard - Secure file encryption tool using AES-128. Encrypt/decrypt files with one click. For Windows. Standalone EXE, no install needed. Share files safely with military-grade encryption. Open-source (GPL-3.0).", "html_url": "https://github.com/Arezki-Cherfouh/CryptGuard", "language": "Python", "stargazers_count": 3, "topics": [] },
+          { "name": "Emailer", "description": "A multi-service email sender in Python that sends messages via Gmail SMTP, Gmail API, Brevo, Mailjet, and SendGrid. Automatically falls back if one service fails, enabling reliable delivery of HTML emails to any recipient while demonstrating integration with multiple email APIs.", "html_url": "https://github.com/Arezki-Cherfouh/Emailer", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Password-Hashing", "description": "A simple Python script to hash passwords securely using Passlib. Supports Argon2 and bcrypt algorithms, allowing users to input passwords and receive strong, hashed outputs suitable for safe storage and authentication systems.", "html_url": "https://github.com/Arezki-Cherfouh/Password-Hashing", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Timer", "description": "Python countdown timer supporting HH:MM:SS or seconds input. Plays a custom audio alert when time is up. Built with pygame for sound playback and simple console interface for easy timer setup.", "html_url": "https://github.com/Arezki-Cherfouh/Timer", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "Smart-File-Reader", "description": "A cross-platform Tkinter app that reads text from PDFs, HTML, DOCX, CSV/XLSX, and images (OCR) aloud using TTS. Supports multiple encodings, handles unsupported file types gracefully, and provides a simple GUI for choosing files to read.", "html_url": "https://github.com/Arezki-Cherfouh/Smart-File-Reader", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "School-Physics", "description": "A FastAPI app that fetches images from school Physics Telegram group, uploads them to IMGBB, caches metadata on GitHub, and displays a scrollable web gallery. Supports captions, sender info, and automatic cache updates for efficient image management and viewing.", "html_url": "https://github.com/Arezki-Cherfouh/School-Physics", "language": "Python", "stargazers_count": 1, "topics": [] },
+          { "name": "NoteMaster", "description": "NoteMaster calcule vos moyennes scolaires en un clic. Sélectionnez votre niveau, entrez vos notes (devoirs, évaluations, TP, compositions) et leurs coefficients, et obtenez instantanément vos résultats. Parfait pour le primaire, collège et lycée. Simple, précis, efficace.", "html_url": "https://github.com/Arezki-Cherfouh/NoteMaster", "language": "Python", "stargazers_count": 3, "topics": [] }
         ]);
-      } finally {
-        setLoading(false);
-      }
+      } finally { setLoading(false); }
     };
     fetchRepos();
   }, []);
 
   const skills = [
-    { name: "Python", level: 95, icon: "🐍" },
-    { name: "C++", level: 85, icon: "⚙️" },
-    { name: "JavaScript", level: 90, icon: "⚡" },
-    { name: "TypeScript", level: 90, icon: "📘" },
-    { name: "FastAPI", level: 85, icon: "🚀" },
-    { name: "Node.js", level: 85, icon: "💚" },
-    { name: "PostgreSQL", level: 90, icon: "🐘" },
-    { name: "React", level: 85, icon: "⚛️" },
-    { name: "React Native", level: 80, icon: "📱" },
-    { name: "HTML/CSS", level: 95, icon: "🎨" },
-    { name: "Tailwind CSS", level: 90, icon: "💨" },
-    { name: "Bootstrap", level: 85, icon: "🅱️" },
-    { name: "System Design", level: 75, icon: "🏗️" },
-    { name: "AI/ML", level: 75, icon: "🤖" },
+    { name: 'Python', level: 95, icon: '🐍' }, { name: 'C++', level: 85, icon: '⚙️' }, { name: 'JavaScript', level: 90, icon: '⚡' },
+    { name: 'TypeScript', level: 90, icon: '📘' }, { name: 'FastAPI', level: 85, icon: '🚀' }, { name: 'Node.js', level: 85, icon: '💚' },
+    { name: 'PostgreSQL', level: 90, icon: '🐘' }, { name: 'React', level: 85, icon: '⚛️' }, { name: 'React Native', level: 80, icon: '📱' },
+    { name: 'HTML/CSS', level: 95, icon: '🎨' }, { name: 'Tailwind CSS', level: 90, icon: '💨' }, { name: 'Bootstrap', level: 85, icon: '🅱️' },
+    { name: 'System Design', level: 75, icon: '🏗️' }, { name: 'AI/ML', level: 75, icon: '🤖' }
   ];
 
-  const filteredRepos = repos.filter(
-    (repo) =>
-      repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (repo.description &&
-        repo.description.toLowerCase().includes(searchTerm.toLowerCase())),
+  const filteredRepos = repos.filter(repo =>
+    repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (repo.description && repo.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
-    <div
-      className="min-h-screen transition-colors duration-500"
-      style={{
-        background: "var(--bg-primary)",
-        color: "var(--text-primary)",
-        fontFamily: '"JetBrains Mono", "Fira Code", monospace',
-        width: "100vw",
-        maxWidth: "100%",
-        overflowX: "hidden",
-        margin: 0,
-        padding: 0,
-      }}
-    >
+    <div className="min-h-screen transition-colors duration-500" style={{ 
+      background: 'var(--bg-primary)', color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+      width: '100vw', maxWidth: '100%', overflowX: 'hidden', margin: 0, padding: 0
+    }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&display=swap');
         
@@ -565,105 +190,24 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = "about" }) => {
         }
       `}</style>
 
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      >
-        <div
-          className="circuit-line"
-          style={{ left: "10%", animationDelay: "0s" }}
-        ></div>
-        <div
-          className="circuit-line"
-          style={{ left: "30%", animationDelay: "1s" }}
-        ></div>
-        <div
-          className="circuit-line"
-          style={{ left: "50%", animationDelay: "2s" }}
-        ></div>
-        <div
-          className="circuit-line"
-          style={{ left: "70%", animationDelay: "0.5s" }}
-        ></div>
-        <div
-          className="circuit-line"
-          style={{ left: "90%", animationDelay: "1.5s" }}
-        ></div>
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}>
+        <div className="circuit-line" style={{ left: '10%', animationDelay: '0s' }}></div>
+        <div className="circuit-line" style={{ left: '30%', animationDelay: '1s' }}></div>
+        <div className="circuit-line" style={{ left: '50%', animationDelay: '2s' }}></div>
+        <div className="circuit-line" style={{ left: '70%', animationDelay: '0.5s' }}></div>
+        <div className="circuit-line" style={{ left: '90%', animationDelay: '1.5s' }}></div>
       </div>
 
-      <header
-        className="glass-effect"
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
-          padding: "20px 0",
-          borderBottom: "1px solid var(--border-color)",
-          width: "100%",
-        }}
-      >
-        <nav
-          className="header-nav"
-          style={{
-            margin: "0 auto",
-            padding: "0 24px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            maxWidth: "100%",
-          }}
-        >
-          <div
-            className="header-logo"
-            style={{
-              fontSize: "28px",
-              fontWeight: 700,
-              fontFamily: '"Orbitron", monospace',
-              background: `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-            }}
-          >
+      <header className="glass-effect" style={{ position: 'sticky', top: 0, zIndex: 50, padding: '20px 0', borderBottom: '1px solid var(--border-color)', width: '100%' }}>
+        <nav className="header-nav" style={{ margin: '0 auto', padding: '0 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '100%' }}>
+          <div className="header-logo" style={{ fontSize: '28px', fontWeight: 700, fontFamily: '"Orbitron", monospace', background: `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Terminal size={32} className="cursor-pointer" />
-            <span
-              className="glow-text cursor-pointer"
-              style={{ userSelect: "none" }}
-            >
-              AC
-            </span>
+            <span className="glow-text cursor-pointer" style={{userSelect: 'none'}}>AC</span>
           </div>
-          <div className="nav-tabs" style={{ display: "flex", gap: "32px" }}>
-            {["about", "projects", "skills", "contact"].map((tab) => (
-              <Link
-                key={tab}
-                to={`/${tab}`}
-                className={`tab-button cursor-pointer ${activeTab === tab ? "active" : ""}`}
-                style={{
-                  background: "transparent",
-                  color:
-                    activeTab === tab
-                      ? "var(--accent-primary)"
-                      : "var(--text-secondary)",
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  padding: "8px 0",
-                  textTransform: "uppercase",
-                  letterSpacing: "2px",
-                  fontFamily: '"Orbitron", monospace',
-                  textDecoration: "none",
-                }}
-              >
+          <div className="nav-tabs" style={{ display: 'flex', gap: '32px' }}>
+            {['about', 'projects', 'skills', 'contact'].map(tab => (
+              <Link key={tab} to={`/${tab}`} className={`tab-button cursor-pointer ${activeTab === tab ? 'active' : ''}`}
+                style={{ background: 'transparent', color: activeTab === tab ? 'var(--accent-primary)' : 'var(--text-secondary)', fontSize: '16px', fontWeight: 600, padding: '8px 0', textTransform: 'uppercase', letterSpacing: '2px', fontFamily: '"Orbitron", monospace', textDecoration: 'none' }}>
                 {tab}
               </Link>
             ))}
@@ -671,642 +215,147 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = "about" }) => {
         </nav>
       </header>
 
-      <main
-        className="main-content"
-        style={{
-          width: "100%",
-          margin: "0 auto",
-          padding: "60px 24px",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        {activeTab === "about" && (
-          <div style={{ animation: "fadeIn 0.5s ease-in" }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: "48px",
-              }}
-            >
-              <div style={{ position: "relative" }}>
+      <main className="main-content" style={{ width: '100%', margin: '0 auto', padding: '60px 24px', position: 'relative', zIndex: 1 }}>
+        {activeTab === 'about' && (
+          <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '48px' }}>
+              <div style={{ position: 'relative' }}>
                 <div
                   onClick={handlePfpClick}
-                  // className={`pfp-container profile-picture-container ${isPlaying ? "pfp-playing" : "pulse-glow"}`}
-                  className={`pfp-container profile-picture-container cursor-pointer ${isPlaying ? "pfp-playing" : "pulse-glow"}`}
-                  title={
-                    isPlaying ? "Click to stop music" : "Click to play music"
-                  }
-                  style={{
-                    width: "200px",
-                    height: "200px",
-                    borderRadius: "50%",
-                    border: "4px solid var(--accent-primary)",
-                    padding: "8px",
-                    background: `linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary))`,
-                  }}
+                  className={`pfp-container profile-picture-container cursor-pointer ${isPlaying ? 'pfp-playing' : 'pulse-glow'}`}
+                  title={isPlaying ? 'Click to stop music' : 'Click to play music'}
+                  style={{ width: '200px', height: '200px', borderRadius: '50%', border: '4px solid var(--accent-primary)', padding: '8px', background: `linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary))` }}
                 >
-                  <img
-                    src="https://avatars.githubusercontent.com/u/195492204?v=4"
-                    alt="Arezki Cherfouh"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      userSelect: "none",
-                      pointerEvents: "none",
-                    }}
-                  />
+                  <img src="https://avatars.githubusercontent.com/u/195492204?v=4" alt="Arezki Cherfouh"
+                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', userSelect: 'none', pointerEvents: 'none' }} />
                   {isPlaying && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "8px",
-                        right: "8px",
-                        background: "var(--accent-primary)",
-                        borderRadius: "50%",
-                        width: "28px",
-                        height: "28px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "14px",
-                        boxShadow: "0 0 10px var(--accent-glow)",
-                      }}
-                    >
+                    <div style={{ position: 'absolute', bottom: '8px', right: '8px', background: 'var(--accent-primary)', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', boxShadow: '0 0 10px var(--accent-glow)' }}>
                       🎵
                     </div>
                   )}
                 </div>
-                <div
-                  className="profile-badge"
-                  style={{
-                    position: "absolute",
-                    top: "-10px",
-                    right: "-10px",
-                    background: "var(--accent-primary)",
-                    borderRadius: "50%",
-                    padding: "12px",
-                    boxShadow: "0 0 30px var(--accent-glow)",
-                  }}
-                >
+                <div className="profile-badge" style={{ position: 'absolute', top: '-10px', right: '-10px', background: 'var(--accent-primary)', borderRadius: '50%', padding: '12px', boxShadow: '0 0 30px var(--accent-glow)' }}>
                   <Cpu size={28} color="var(--bg-primary)" />
                 </div>
               </div>
             </div>
 
-            <div style={{ textAlign: "center", marginBottom: "48px" }}>
-              <h1
-                className="main-title cursor-pointer"
-                style={{
-                  fontSize: "56px",
-                  fontWeight: 900,
-                  marginBottom: "16px",
-                  fontFamily: '"Orbitron", monospace',
-                  background: `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  userSelect: "none",
-                }}
-              >
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <h1 className="main-title cursor-pointer" style={{ fontSize: '56px', fontWeight: 900, marginBottom: '16px', fontFamily: '"Orbitron", monospace', background: `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', userSelect: 'none' }}>
                 AREZKI CHERFOUH
               </h1>
-              <p
-                className="main-subtitle cursor-pointer"
-                style={{
-                  fontSize: "24px",
-                  color: "var(--text-secondary)",
-                  marginBottom: "24px",
-                  fontWeight: 600,
-                  userSelect: "none",
-                }}
-              >
-                Founder & CEO of Qwerify | Software Engineer | AI Enthusiast
+              <p className="main-subtitle cursor-pointer" style={{ fontSize: '24px', color: 'var(--text-secondary)', marginBottom: '24px', fontWeight: 600, userSelect: 'none' }}>
+                Founder @ Qwerify | SWE | AI & Tech Builder
               </p>
-              <div
-                className="social-links"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "24px",
-                  marginTop: "32px",
-                }}
-              >
-                <a
-                  href="https://github.com/Arezki-Cherfouh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="neon-border social-link cursor-pointer"
-                  style={{
-                    padding: "12px 24px",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    textDecoration: "none",
-                    color: "var(--text-primary)",
-                    transition: "all 0.3s ease",
-                    background: "var(--bg-secondary)",
-                  }}
-                >
-                  <Github size={20} />
-                  <span>GitHub</span>
+              <div className="social-links" style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '32px' }}>
+                <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer" className="neon-border social-link cursor-pointer" style={{ padding: '12px 24px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'var(--text-primary)', transition: 'all 0.3s ease', background: 'var(--bg-secondary)' }}>
+                  <Github size={20} /><span>GitHub</span>
                 </a>
-                <a
-                  href="https://www.linkedin.com/in/arezki-cherfouh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="neon-border social-link cursor-pointer"
-                  style={{
-                    padding: "12px 24px",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    textDecoration: "none",
-                    color: "var(--text-primary)",
-                    transition: "all 0.3s ease",
-                    background: "var(--bg-secondary)",
-                  }}
-                >
-                  <Linkedin size={20} />
-                  <span>LinkedIn</span>
+                <a href="https://www.linkedin.com/in/arezki-cherfouh" target="_blank" rel="noopener noreferrer" className="neon-border social-link cursor-pointer" style={{ padding: '12px 24px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'var(--text-primary)', transition: 'all 0.3s ease', background: 'var(--bg-secondary)' }}>
+                  <Linkedin size={20} /><span>LinkedIn</span>
                 </a>
-                <a
-                  href="https://qwerify.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="neon-border social-link cursor-pointer"
-                  style={{
-                    padding: "12px 24px",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    textDecoration: "none",
-                    color: "var(--text-primary)",
-                    transition: "all 0.3s ease",
-                    background: "var(--bg-secondary)",
-                  }}
-                >
-                  <ExternalLink size={20} />
-                  <span>Qwerify</span>
+                <a href="https://qwerify.vercel.app" target="_blank" rel="noopener noreferrer" className="neon-border social-link cursor-pointer" style={{ padding: '12px 24px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'var(--text-primary)', transition: 'all 0.3s ease', background: 'var(--bg-secondary)' }}>
+                  <ExternalLink size={20} /><span>Qwerify</span>
                 </a>
               </div>
             </div>
 
-            <div
-              className="glass-effect scan-line about-section"
-              style={{
-                padding: "40px",
-                borderRadius: "16px",
-                marginBottom: "32px",
-              }}
-            >
-              <h2
-                className="section-title cursor-pointer"
-                style={{
-                  fontSize: "32px",
-                  marginBottom: "24px",
-                  color: "var(--accent-primary)",
-                  fontFamily: '"Orbitron", monospace',
-                  userSelect: "none",
-                }}
-              >
-                <Sparkles
-                  size={28}
-                  style={{ display: "inline", marginRight: "12px" }}
-                />
-                About Me
+            <div className="glass-effect scan-line about-section" style={{ padding: '40px', borderRadius: '16px', marginBottom: '32px' }}>
+              <h2 className="section-title cursor-pointer" style={{ fontSize: '32px', marginBottom: '24px', color: 'var(--accent-primary)', fontFamily: '"Orbitron", monospace', userSelect: 'none' }}>
+                <Sparkles size={28} style={{ display: 'inline', marginRight: '12px' }} />About Me
               </h2>
-              <div
-                className="about-text"
-                style={{
-                  fontSize: "18px",
-                  lineHeight: "1.8",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                <p style={{ marginBottom: "16px" }}>
-                  I'm Arezki Cherfouh, a student developer and the{" "}
-                  <strong style={{ color: "var(--accent-primary)" }}>
-                    Founder & CEO of Qwerify
-                  </strong>
-                  , an independent tech project I started on July 19, 2025 to
-                  rethink how people connect and interact through technology.
+              <div className="about-text" style={{ fontSize: '18px', lineHeight: '1.8', color: 'var(--text-secondary)' }}>
+                <p style={{ marginBottom: '16px' }}>
+                  I'm Arezki Cherfouh, a student developer passionate about <strong style={{ color: 'var(--accent-primary)' }}>AI engineering, systems architecture, and innovation</strong>. Born in September 2009, my journey is driven by a long-term goal to become a world-class AI engineer and technology leader, building software systems that prioritize human focus, performance, and scalability.
                 </p>
-                <p style={{ marginBottom: "16px" }}>
-                  Born on September 07, 2009 and passionate about AI and
-                  innovation. Qwerify is currently in development — not yet a
-                  registered company — but it represents my long-term vision of
-                  building a global technology brand that expands beyond
-                  communication into AI-driven systems, productivity tools, and
-                  scalable digital experiences that{" "}
-                  <strong style={{ color: "var(--accent-primary)" }}>
-                    help people without distraction
-                  </strong>
-                  .
+                <p style={{ marginBottom: '16px' }}>
+                  As a self-driven Software AI Engineer, I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, C++, JavaScript/TypeScript, FastAPI, Node.js, SQL (PostgreSQL), and ReactJS/React Native</strong>, with hands-on experience spanning network architectures, intelligence-driven backends, and full-stack software initiatives.
                 </p>
-                <p style={{ marginBottom: "16px" }}>
-                  I specialize in{" "}
-                  <strong style={{ color: "var(--accent-primary)" }}>
-                    Python, C++, JavaScript/TypeScript, FastAPI, Node.js, SQL
-                    (PostgreSQL), ReactJS/React Native, HTML/CSS, Tailwind CSS &
-                    Bootstrap
-                  </strong>
-                  , with growing experience in system design and AI.
-                </p>
-                <p style={{ marginBottom: "16px" }}>
-                  Through Qwerify, I've gained practical experience in
-                  full-stack development, real-time communication, secure
-                  authentication, and infrastructure scalability.
+                <p style={{ marginBottom: '16px' }}>
+                  A major milestone in my track record is <strong style={{ color: 'var(--accent-primary)' }}>Qwerify</strong>, an independent technology initiative I launched on July 19, 2025. Through Qwerify, I architected and built a multi-platform ecosystem designed around privacy and zero-distraction frameworks—including an AI assistant, real-time communication networks with voice/video calling, and interactive embedded gaming environments.
                 </p>
                 <p>
-                  My long-term goal is to become a{" "}
-                  <strong style={{ color: "var(--accent-primary)" }}>
-                    world-class AI engineer and CEO
-                  </strong>
-                  , and to grow Qwerify into a global company that competes with
-                  leading tech innovators — guided by the principles of privacy,
-                  focus, and human-centered design.
+                  My backend experience includes training and fine-tuning specialized LLM interfaces, implementing low-latency real-time synchronization pipelines, microservices, and secure authentication workflows.
                 </p>
               </div>
             </div>
-
-            <div
-              className="glass-effect about-section"
-              style={{ padding: "40px", borderRadius: "16px" }}
-            >
-              <h3
-                className="current-focus-title cursor-pointer"
-                style={{
-                  fontSize: "28px",
-                  marginBottom: "24px",
-                  color: "var(--accent-primary)",
-                  fontFamily: '"Orbitron", monospace',
-                  userSelect: "none",
-                }}
-              >
-                Current Focus
-              </h3>
-              <ul
-                className="current-focus-list"
-                style={{
-                  listStyle: "none",
-                  fontSize: "18px",
-                  lineHeight: "2",
-                  color: "var(--text-secondary)",
-                }}
-              >
-                <li
-                  style={{
-                    marginBottom: "12px",
-                    display: "flex",
-                    alignItems: "start",
-                  }}
-                >
-                  Strengthening my knowledge in data structures, algorithms, and
-                  system design for big tech opportunities
+            
+            <div className="glass-effect about-section" style={{ padding: '40px', borderRadius: '16px' }}>
+              <h3 className="current-focus-title cursor-pointer" style={{ fontSize: '28px', marginBottom: '24px', color: 'var(--accent-primary)', fontFamily: '"Orbitron", monospace', userSelect: 'none' }}>Current Focus</h3>
+              <ul className="current-focus-list" style={{ listStyle: 'none', fontSize: '18px', lineHeight: '2', color: 'var(--text-secondary)' }}>
+                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>
+                  Mastering advanced Data Structures, Algorithms, System Design, and AI-integrated ecosystems
                 </li>
-                <li
-                  style={{
-                    marginBottom: "12px",
-                    display: "flex",
-                    alignItems: "start",
-                  }}
-                >
-                  Expanding Qwerify with AI features and mobile development
+                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>
+                  Expanding data-heavy backends, LLM interfaces, and low-latency real-time pipelines
                 </li>
-                <li
-                  style={{
-                    marginBottom: "12px",
-                    display: "flex",
-                    alignItems: "start",
-                  }}
-                >
-                  Building a professional portfolio on GitHub and connecting
-                  with engineers, founders, and innovators worldwide
+                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>
+                  Pursuing software engineering roles, AI/ML internships, and technical collaborations with global innovators
                 </li>
               </ul>
             </div>
           </div>
         )}
 
-        {activeTab === "projects" && (
-          <div style={{ animation: "fadeIn 0.5s ease-in" }}>
-            <h2
-              className="projects-title cursor-pointer"
-              style={{
-                fontSize: "48px",
-                marginBottom: "32px",
-                fontFamily: '"Orbitron", monospace',
-                color: "var(--accent-primary)",
-                textAlign: "center",
-                userSelect: "none",
-              }}
-            >
-              <Code2
-                size={40}
-                style={{ display: "inline", marginRight: "16px" }}
-              />
-              Projects Portfolio
+        {activeTab === 'projects' && (
+          <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
+            <h2 className="projects-title cursor-pointer" style={{ fontSize: '48px', marginBottom: '32px', fontFamily: '"Orbitron", monospace', color: 'var(--accent-primary)', textAlign: 'center', userSelect: 'none' }}>
+              <Code2 size={40} style={{ display: 'inline', marginRight: '16px' }} />Projects Portfolio
             </h2>
-            <div style={{ marginBottom: "32px", textAlign: "center" }}>
-              <input
-                type="text"
-                placeholder="Search projects..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="neon-border search-input"
-                style={{
-                  padding: "16px 24px",
-                  fontSize: "18px",
-                  borderRadius: "12px",
-                  background: "var(--bg-secondary)",
-                  color: "var(--text-primary)",
-                  width: "100%",
-                  maxWidth: "600px",
-                  outline: "none",
-                }}
-              />
+            <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+              <input type="text" placeholder="Search projects..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="neon-border search-input"
+                style={{ padding: '16px 24px', fontSize: '18px', borderRadius: '12px', background: 'var(--bg-secondary)', color: 'var(--text-primary)', width: '100%', maxWidth: '600px', outline: 'none' }} />
             </div>
-            <div
-              className="projects-grid"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-                gap: "24px",
-                marginBottom: "32px",
-              }}
-            >
+            <div className="projects-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '24px', marginBottom: '32px' }}>
               {loading ? (
-                <div
-                  style={{
-                    gridColumn: "1 / -1",
-                    textAlign: "center",
-                    padding: "60px",
-                    fontSize: "20px",
-                    color: "var(--text-secondary)",
-                  }}
-                >
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px', fontSize: '20px', color: 'var(--text-secondary)' }}>
                   <div className="floating">Loading projects...</div>
                 </div>
               ) : filteredRepos.length > 0 ? (
                 filteredRepos.map((repo, index) => (
-                  <div
-                    key={index}
-                    className="project-card glass-effect cursor-pointer"
-                    style={{
-                      padding: "32px",
-                      borderRadius: "16px",
-                      border: "1px solid var(--border-color)",
-                      animationDelay: `${index * 0.1}s`,
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "start",
-                        marginBottom: "16px",
-                      }}
-                    >
-                      <h3
-                        className="project-title"
-                        style={{
-                          fontSize: "24px",
-                          color: "var(--accent-primary)",
-                          fontFamily: '"Orbitron", monospace',
-                          fontWeight: 700,
-                        }}
-                      >
-                        {repo.name}
-                      </h3>
-                      {repo.stargazers_count > 0 && (
-                        <div
-                          style={{
-                            background: "var(--accent-primary)",
-                            color: "var(--bg-primary)",
-                            padding: "4px 12px",
-                            borderRadius: "20px",
-                            fontSize: "14px",
-                            fontWeight: 600,
-                          }}
-                        >
-                          ⭐ {repo.stargazers_count}
-                        </div>
-                      )}
+                  <div key={index} className="project-card glass-effect cursor-pointer" style={{ padding: '32px', borderRadius: '16px', border: '1px solid var(--border-color)', animationDelay: `${index * 0.1}s` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
+                      <h3 className="project-title" style={{ fontSize: '24px', color: 'var(--accent-primary)', fontFamily: '"Orbitron", monospace', fontWeight: 700 }}>{repo.name}</h3>
+                      {repo.stargazers_count > 0 && (<div style={{ background: 'var(--accent-primary)', color: 'var(--bg-primary)', padding: '4px 12px', borderRadius: '20px', fontSize: '14px', fontWeight: 600 }}>⭐ {repo.stargazers_count}</div>)}
                     </div>
-                    <p
-                      className="project-description"
-                      style={{
-                        color: "var(--text-secondary)",
-                        marginBottom: "20px",
-                        lineHeight: "1.6",
-                        minHeight: "60px",
-                      }}
-                    >
-                      {repo.description || "No description available"}
-                    </p>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginTop: "20px",
-                      }}
-                    >
-                      {repo.language && (
-                        <span
-                          className="project-language"
-                          style={{
-                            background: "var(--bg-tertiary)",
-                            padding: "6px 16px",
-                            borderRadius: "20px",
-                            fontSize: "14px",
-                            color: "var(--accent-primary)",
-                            fontWeight: 600,
-                          }}
-                        >
-                          {repo.language}
-                        </span>
-                      )}
-                      <a
-                        href={repo.html_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="neon-border project-link cursor-pointer"
-                        style={{
-                          padding: "8px 16px",
-                          borderRadius: "8px",
-                          textDecoration: "none",
-                          color: "var(--text-primary)",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                          background: "var(--bg-secondary)",
-                          fontSize: "14px",
-                          fontWeight: 600,
-                        }}
-                      >
-                        View
-                        <ExternalLink size={16} />
+                    <p className="project-description" style={{ color: 'var(--text-secondary)', marginBottom: '20px', lineHeight: '1.6', minHeight: '60px' }}>{repo.description || 'No description available'}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+                      {repo.language && (<span className="project-language" style={{ background: 'var(--bg-tertiary)', padding: '6px 16px', borderRadius: '20px', fontSize: '14px', color: 'var(--accent-primary)', fontWeight: 600 }}>{repo.language}</span>)}
+                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="neon-border project-link cursor-pointer" style={{ padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--bg-secondary)', fontSize: '14px', fontWeight: 600 }}>
+                        View<ExternalLink size={16} />
                       </a>
                     </div>
                   </div>
                 ))
               ) : (
-                <div
-                  style={{
-                    gridColumn: "1 / -1",
-                    textAlign: "center",
-                    padding: "60px",
-                    fontSize: "20px",
-                    color: "var(--text-secondary)",
-                  }}
-                >
-                  No projects found matching &quot;{searchTerm}&quot;
-                </div>
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px', fontSize: '20px', color: 'var(--text-secondary)' }}>No projects found matching &quot;{searchTerm}&quot;</div>
               )}
             </div>
-            <div
-              className="repos-summary"
-              style={{
-                textAlign: "center",
-                marginTop: "48px",
-                padding: "32px",
-                background: "var(--bg-secondary)",
-                borderRadius: "16px",
-                border: "1px solid var(--border-color)",
-              }}
-            >
-              <p
-                className="repos-text"
-                style={{
-                  fontSize: "18px",
-                  color: "var(--text-secondary)",
-                  marginBottom: "16px",
-                }}
-              >
-                Total Repositories:{" "}
-                <strong style={{ color: "var(--accent-primary)" }}>
-                  {repos.length}
-                </strong>
-              </p>
-              <a
-                href="https://github.com/Arezki-Cherfouh?tab=repositories"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="neon-border view-all-button cursor-pointer"
-                style={{
-                  display: "inline-flex",
-                  padding: "16px 32px",
-                  borderRadius: "12px",
-                  textDecoration: "none",
-                  color: "var(--text-primary)",
-                  alignItems: "center",
-                  gap: "12px",
-                  background: "var(--bg-tertiary)",
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  fontFamily: '"Orbitron", monospace',
-                }}
-              >
-                View All on GitHub
-                <Github size={20} />
+            <div className="repos-summary" style={{ textAlign: 'center', marginTop: '48px', padding: '32px', background: 'var(--bg-secondary)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+              <p className="repos-text" style={{ fontSize: '18px', color: 'var(--text-secondary)', marginBottom: '16px' }}>Total Repositories: <strong style={{ color: 'var(--accent-primary)' }}>{repos.length}</strong></p>
+              <a href="https://github.com/Arezki-Cherfouh?tab=repositories" target="_blank" rel="noopener noreferrer" className="neon-border view-all-button cursor-pointer"
+                style={{ display: 'inline-flex', padding: '16px 32px', borderRadius: '12px', textDecoration: 'none', color: 'var(--text-primary)', alignItems: 'center', gap: '12px', background: 'var(--bg-tertiary)', fontSize: '16px', fontWeight: 600, fontFamily: '"Orbitron", monospace' }}>
+                View All on GitHub<Github size={20} />
               </a>
             </div>
           </div>
         )}
 
-        {activeTab === "skills" && (
-          <div style={{ animation: "fadeIn 0.5s ease-in" }}>
-            <h2
-              className="skills-section-title cursor-pointer"
-              style={{
-                fontSize: "48px",
-                marginBottom: "48px",
-                fontFamily: '"Orbitron", monospace',
-                color: "var(--accent-primary)",
-                textAlign: "center",
-                userSelect: "none",
-              }}
-            >
-              Technical Expertise
-            </h2>
-            <div style={{ display: "grid", gap: "24px" }}>
+        {activeTab === 'skills' && (
+          <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
+            <h2 className="skills-section-title cursor-pointer" style={{ fontSize: '48px', marginBottom: '48px', fontFamily: '"Orbitron", monospace', color: 'var(--accent-primary)', textAlign: 'center', userSelect: 'none' }}>Technical Expertise</h2>
+            <div style={{ display: 'grid', gap: '24px' }}>
               {skills.map((skill, index) => (
-                <div
-                  key={index}
-                  className="tech-card glass-effect skill-card cursor-pointer"
-                  style={{
-                    padding: "32px",
-                    borderRadius: "16px",
-                    animationDelay: `${index * 0.1}s`,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      marginBottom: "16px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "16px",
-                      }}
-                    >
-                      <span className="skill-icon" style={{ fontSize: "32px" }}>
-                        {skill.icon}
-                      </span>
-                      <h3
-                        className="skill-name"
-                        style={{
-                          fontSize: "24px",
-                          fontFamily: '"Orbitron", monospace',
-                          color: "var(--text-primary)",
-                        }}
-                      >
-                        {skill.name}
-                      </h3>
+                <div key={index} className="tech-card glass-effect skill-card cursor-pointer" style={{ padding: '32px', borderRadius: '16px', animationDelay: `${index * 0.1}s` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <span className="skill-icon" style={{ fontSize: '32px' }}>{skill.icon}</span>
+                      <h3 className="skill-name" style={{ fontSize: '24px', fontFamily: '"Orbitron", monospace', color: 'var(--text-primary)' }}>{skill.name}</h3>
                     </div>
-                    <span
-                      className="skill-percentage"
-                      style={{
-                        fontSize: "20px",
-                        fontWeight: 700,
-                        color: "var(--accent-primary)",
-                      }}
-                    >
-                      {skill.level}%
-                    </span>
+                    <span className="skill-percentage" style={{ fontSize: '20px', fontWeight: 700, color: 'var(--accent-primary)' }}>{skill.level}%</span>
                   </div>
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "12px",
-                      background: "var(--bg-tertiary)",
-                      borderRadius: "6px",
-                      overflow: "hidden",
-                      border: "1px solid var(--border-color)",
-                    }}
-                  >
-                    <div
-                      className="skill-bar"
-                      style={{
-                        width: `${skill.level}%`,
-                        height: "100%",
-                        background: `linear-gradient(90deg, var(--accent-primary), var(--accent-secondary))`,
-                        borderRadius: "6px",
-                        transition: "width 1s ease-out",
-                      }}
-                    />
+                  <div style={{ width: '100%', height: '12px', background: 'var(--bg-tertiary)', borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                    <div className="skill-bar" style={{ width: `${skill.level}%`, height: '100%', background: `linear-gradient(90deg, var(--accent-primary), var(--accent-secondary))`, borderRadius: '6px', transition: 'width 1s ease-out' }} />
                   </div>
                 </div>
               ))}
@@ -1314,156 +363,29 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = "about" }) => {
           </div>
         )}
 
-        {activeTab === "contact" && (
-          <div style={{ animation: "fadeIn 0.5s ease-in" }}>
-            <h2
-              className="contact-title cursor-pointer"
-              style={{
-                fontSize: "48px",
-                marginBottom: "32px",
-                fontFamily: '"Orbitron", monospace',
-                color: "var(--accent-primary)",
-                textAlign: "center",
-                userSelect: "none",
-              }}
-            >
-              Get In Touch
-            </h2>
-            <div
-              className="glass-effect contact-container"
-              style={{
-                padding: "60px",
-                borderRadius: "16px",
-                maxWidth: "800px",
-                margin: "0 auto",
-                textAlign: "center",
-              }}
-            >
-              <Mail
-                className="contact-icon"
-                size={64}
-                style={{ color: "var(--accent-primary)", marginBottom: "32px" }}
-              />
-              <p
-                className="contact-description"
-                style={{
-                  fontSize: "20px",
-                  color: "var(--text-secondary)",
-                  marginBottom: "48px",
-                  lineHeight: "1.8",
-                }}
-              >
-                Always open to collaborating with those who share the vision of
-                creating technology that empowers people — not distracts them.
+        {activeTab === 'contact' && (
+          <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
+            <h2 className="contact-title cursor-pointer" style={{ fontSize: '48px', marginBottom: '32px', fontFamily: '"Orbitron", monospace', color: 'var(--accent-primary)', textAlign: 'center', userSelect: 'none' }}>Get In Touch</h2>
+            <div className="glass-effect contact-container" style={{ padding: '60px', borderRadius: '16px', maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+              <Mail className="contact-icon" size={64} style={{ color: 'var(--accent-primary)', marginBottom: '32px' }} />
+              <p className="contact-description" style={{ fontSize: '20px', color: 'var(--text-secondary)', marginBottom: '48px', lineHeight: '1.8' }}>
+                Always open to collaborating with those who share the vision of creating technology that empowers people — not distracts them.
               </p>
-              <div style={{ display: "grid", gap: "24px", marginTop: "48px" }}>
-                <a
-                  href="mailto:qwerify.ceo@gmail.com"
-                  className="neon-border tech-card contact-link cursor-pointer"
-                  style={{
-                    padding: "24px",
-                    borderRadius: "12px",
-                    textDecoration: "none",
-                    color: "var(--text-primary)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "16px",
-                    background: "var(--bg-secondary)",
-                    fontSize: "20px",
-                    fontWeight: 600,
-                  }}
-                >
-                  <Mail size={28} />
-                  <span>Email: qwerify.ceo@gmail.com</span>
+              <div style={{ display: 'grid', gap: '24px', marginTop: '48px' }}>
+                <a href="mailto:qwerify.ceo@gmail.com" className="neon-border tech-card contact-link cursor-pointer" style={{ padding: '24px', borderRadius: '12px', textDecoration: 'none', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'var(--bg-secondary)', fontSize: '20px', fontWeight: 600 }}>
+                  <Mail size={28} /><span>Email: qwerify.ceo@gmail.com</span>
                 </a>
-                <a
-                  href="https://github.com/Arezki-Cherfouh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="neon-border tech-card contact-link cursor-pointer"
-                  style={{
-                    padding: "24px",
-                    borderRadius: "12px",
-                    textDecoration: "none",
-                    color: "var(--text-primary)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "16px",
-                    background: "var(--bg-secondary)",
-                    fontSize: "20px",
-                    fontWeight: 600,
-                  }}
-                >
-                  <Github size={28} />
-                  <span>GitHub: @Arezki-Cherfouh</span>
+                <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer" className="neon-border tech-card contact-link cursor-pointer" style={{ padding: '24px', borderRadius: '12px', textDecoration: 'none', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'var(--bg-secondary)', fontSize: '20px', fontWeight: 600 }}>
+                  <Github size={28} /><span>GitHub: @Arezki-Cherfouh</span>
                 </a>
-                <a
-                  href="https://www.linkedin.com/in/arezki-cherfouh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="neon-border tech-card contact-link cursor-pointer"
-                  style={{
-                    padding: "24px",
-                    borderRadius: "12px",
-                    textDecoration: "none",
-                    color: "var(--text-primary)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "16px",
-                    background: "var(--bg-secondary)",
-                    fontSize: "20px",
-                    fontWeight: 600,
-                  }}
-                >
-                  <Linkedin size={28} />
-                  <span>LinkedIn: Arezki Cherfouh</span>
+                <a href="https://www.linkedin.com/in/arezki-cherfouh" target="_blank" rel="noopener noreferrer" className="neon-border tech-card contact-link cursor-pointer" style={{ padding: '24px', borderRadius: '12px', textDecoration: 'none', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'var(--bg-secondary)', fontSize: '20px', fontWeight: 600 }}>
+                  <Linkedin size={28} /><span>LinkedIn: Arezki Cherfouh</span>
                 </a>
-                <a
-                  href="https://qwerify.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="neon-border tech-card contact-link cursor-pointer"
-                  style={{
-                    padding: "24px",
-                    borderRadius: "12px",
-                    textDecoration: "none",
-                    color: "var(--text-primary)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "16px",
-                    background: "var(--bg-secondary)",
-                    fontSize: "20px",
-                    fontWeight: 600,
-                  }}
-                >
-                  <ExternalLink size={28} />
-                  <span>Qwerify: qwerify.vercel.app</span>
+                <a href="https://qwerify.vercel.app" target="_blank" rel="noopener noreferrer" className="neon-border tech-card contact-link cursor-pointer" style={{ padding: '24px', borderRadius: '12px', textDecoration: 'none', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'var(--bg-secondary)', fontSize: '20px', fontWeight: 600 }}>
+                  <ExternalLink size={28} /><span>Qwerify: qwerify.vercel.app</span>
                 </a>
-                <a
-                  href="https://qwerify.vercel.app/profiles?user=1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="neon-border tech-card contact-link cursor-pointer"
-                  style={{
-                    padding: "24px",
-                    borderRadius: "12px",
-                    textDecoration: "none",
-                    color: "var(--text-primary)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "16px",
-                    background: "var(--bg-secondary)",
-                    fontSize: "20px",
-                    fontWeight: 600,
-                  }}
-                >
-                  <Sparkles size={28} />
-                  <span>Qwerify Profile</span>
+                <a href="https://qwerify.vercel.app/profiles?user=1" target="_blank" rel="noopener noreferrer" className="neon-border tech-card contact-link cursor-pointer" style={{ padding: '24px', borderRadius: '12px', textDecoration: 'none', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'var(--bg-secondary)', fontSize: '20px', fontWeight: 600 }}>
+                  <Sparkles size={28} /><span>Qwerify Profile</span>
                 </a>
               </div>
             </div>
@@ -1471,38 +393,17 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = "about" }) => {
         )}
       </main>
 
-      <footer
-        style={{
-          borderTop: "1px solid var(--border-color)",
-          padding: "40px 24px",
-          textAlign: "center",
-          background: "var(--bg-secondary)",
-          width: "100%",
-        }}
-      >
-        <p
-          className="footer-text"
-          style={{ color: "var(--text-secondary)", fontSize: "16px" }}
-        >
-          © {new Date().getFullYear()} Arezki Cherfouh. Built with React &
-          Tailwind CSS.
-        </p>
-        <p
-          className="footer-subtext"
-          style={{
-            color: "var(--text-secondary)",
-            fontSize: "14px",
-            marginTop: "8px",
-          }}
-        >
-          Building technology that empowers people without distraction.
-        </p>
+      <footer style={{ borderTop: '1px solid var(--border-color)', padding: '40px 24px', textAlign: 'center', background: 'var(--bg-secondary)', width: '100%' }}>
+        <p className="footer-text" style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>© {new Date().getFullYear()} Arezki Cherfouh. Built with React & Tailwind CSS.</p>
+        <p className="footer-subtext" style={{ color: 'var(--text-secondary)', fontSize: '14px', marginTop: '8px' }}>Building technology that empowers people without distraction.</p>
       </footer>
     </div>
   );
 };
 
 export default Portfolio;
+
+
 
 // import React, { useState, useEffect } from 'react';
 // import { useLocation, Link } from 'react-router-dom';
@@ -1547,7 +448,7 @@ export default Portfolio;
 //       try {
 //         const response = await fetch('https://api.github.com/users/Arezki-Cherfouh/repos?per_page=100&sort=updated');
 //         const data = await response.json();
-
+        
 //         setRepos(data);
 //       } catch (error) {
 //         console.error('Error fetching repos:', error);
@@ -1905,7 +806,7 @@ export default Portfolio;
 //   );
 
 //   return (
-//     <div className="min-h-screen transition-colors duration-500" style={{
+//     <div className="min-h-screen transition-colors duration-500" style={{ 
 //       background: 'var(--bg-primary)',
 //       color: 'var(--text-primary)',
 //       fontFamily: '"JetBrains Mono", "Fira Code", monospace',
@@ -1917,7 +818,7 @@ export default Portfolio;
 //     }}>
 //       <style>{`
 //         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&display=swap');
-
+        
 //         :root {
 //           --bg-primary: #0a0e17;
 //           --bg-secondary: #151921;
@@ -1998,10 +899,10 @@ export default Portfolio;
 //         }
 
 //         @keyframes pulseGlow {
-//           0%, 100% {
+//           0%, 100% { 
 //             box-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow);
 //           }
-//           50% {
+//           50% { 
 //             box-shadow: 0 0 40px var(--accent-glow), 0 0 80px var(--accent-glow);
 //           }
 //         }
@@ -2029,7 +930,7 @@ export default Portfolio;
 //         }
 
 //         .grid-bg {
-//           background-image:
+//           background-image: 
 //             linear-gradient(var(--border-color) 1px, transparent 1px),
 //             linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
 //           background-size: 50px 50px;
@@ -2361,16 +1262,16 @@ export default Portfolio;
 //       </div>
 
 //       {/* Header */}
-//       <header className="glass-effect" style={{
-//         position: 'sticky',
-//         top: 0,
+//       <header className="glass-effect" style={{ 
+//         position: 'sticky', 
+//         top: 0, 
 //         zIndex: 50,
 //         padding: '20px 0',
 //         borderBottom: '1px solid var(--border-color)',
 //         width: '100%'
 //       }}>
-//         <nav className="header-nav" style={{
-//           margin: '0 auto',
+//         <nav className="header-nav" style={{  
+//           margin: '0 auto', 
 //           padding: '0 24px',
 //           display: 'flex',
 //           justifyContent: 'space-between',
@@ -2378,8 +1279,8 @@ export default Portfolio;
 //           width: '100%',
 //           maxWidth: '100%'
 //         }}>
-//           <div className="header-logo" style={{
-//             fontSize: '28px',
+//           <div className="header-logo" style={{ 
+//             fontSize: '28px', 
 //             fontWeight: 700,
 //             fontFamily: '"Orbitron", monospace',
 //             background: `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`,
@@ -2392,7 +1293,7 @@ export default Portfolio;
 //             <Terminal size={32} className="cursor-pointer" />
 //             <span className="glow-text cursor-pointer" style={{userSelect: 'none'}}>AC</span>
 //           </div>
-
+          
 //           <div className="nav-tabs" style={{ display: 'flex', gap: '32px' }}>
 //             {['about', 'projects', 'skills', 'contact'].map(tab => (
 //               <Link
@@ -2424,10 +1325,10 @@ export default Portfolio;
 //         {activeTab === 'about' && (
 //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
 //             {/* Profile Picture */}
-//             <div style={{
-//               display: 'flex',
-//               justifyContent: 'center',
-//               marginBottom: '48px'
+//             <div style={{ 
+//               display: 'flex', 
+//               justifyContent: 'center', 
+//               marginBottom: '48px' 
 //             }}>
 //               <div style={{ position: 'relative' }}>
 //                 <div className="pulse-glow profile-picture-container cursor-pointer" style={{
@@ -2438,7 +1339,7 @@ export default Portfolio;
 //                   padding: '8px',
 //                   background: `linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary))`
 //                 }}>
-//                   <img
+//                   <img 
 //                     src="https://avatars.githubusercontent.com/u/195492204?v=4"
 //                     alt="Arezki Cherfouh"
 //                     style={{
@@ -2467,8 +1368,8 @@ export default Portfolio;
 
 //             {/* Name and Title */}
 //             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-//               <h1 className="main-title cursor-pointer" style={{
-//                 fontSize: '56px',
+//               <h1 className="main-title cursor-pointer" style={{ 
+//                 fontSize: '56px', 
 //                 fontWeight: 900,
 //                 marginBottom: '16px',
 //                 fontFamily: '"Orbitron", monospace',
@@ -2479,8 +1380,8 @@ export default Portfolio;
 //               }} >
 //                 AREZKI CHERFOUH
 //               </h1>
-//               <p className="main-subtitle cursor-pointer" style={{
-//                 fontSize: '24px',
+//               <p className="main-subtitle cursor-pointer" style={{ 
+//                 fontSize: '24px', 
 //                 color: 'var(--text-secondary)',
 //                 marginBottom: '24px',
 //                 fontWeight: 600,
@@ -2488,16 +1389,16 @@ export default Portfolio;
 //               }}>
 //                 Founder & CEO of Qwerify | Software Engineer | AI Enthusiast
 //               </p>
-//               <div className="social-links" style={{
-//                 display: 'flex',
-//                 justifyContent: 'center',
+//               <div className="social-links" style={{ 
+//                 display: 'flex', 
+//                 justifyContent: 'center', 
 //                 gap: '24px',
 //                 marginTop: '32px'
 //               }}>
-//                 <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer"
+//                 <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer" 
 //                    className="neon-border social-link cursor-pointer"
-//                    style={{
-//                      padding: '12px 24px',
+//                    style={{ 
+//                      padding: '12px 24px', 
 //                      borderRadius: '8px',
 //                      display: 'flex',
 //                      alignItems: 'center',
@@ -2512,8 +1413,8 @@ export default Portfolio;
 //                 </a>
 //                 <a href="https://www.linkedin.com/in/arezki-cherfouh" target="_blank" rel="noopener noreferrer"
 //                    className="neon-border social-link cursor-pointer"
-//                    style={{
-//                      padding: '12px 24px',
+//                    style={{ 
+//                      padding: '12px 24px', 
 //                      borderRadius: '8px',
 //                      display: 'flex',
 //                      alignItems: 'center',
@@ -2528,8 +1429,8 @@ export default Portfolio;
 //                 </a>
 //                 <a href="https://qwerify.vercel.app" target="_blank" rel="noopener noreferrer"
 //                    className="neon-border social-link cursor-pointer"
-//                    style={{
-//                      padding: '12px 24px',
+//                    style={{ 
+//                      padding: '12px 24px', 
 //                      borderRadius: '8px',
 //                      display: 'flex',
 //                      alignItems: 'center',
@@ -2546,13 +1447,13 @@ export default Portfolio;
 //             </div>
 
 //             {/* Bio */}
-//             <div className="glass-effect scan-line about-section" style={{
-//               padding: '40px',
+//             <div className="glass-effect scan-line about-section" style={{ 
+//               padding: '40px', 
 //               borderRadius: '16px',
 //               marginBottom: '32px'
 //             }}>
-//               <h2 className="section-title cursor-pointer" style={{
-//                 fontSize: '32px',
+//               <h2 className="section-title cursor-pointer" style={{ 
+//                 fontSize: '32px', 
 //                 marginBottom: '24px',
 //                 color: 'var(--accent-primary)',
 //                 fontFamily: '"Orbitron", monospace',
@@ -2561,44 +1462,44 @@ export default Portfolio;
 //                 <Sparkles size={28} style={{ display: 'inline', marginRight: '12px' }} />
 //                 About Me
 //               </h2>
-//               <div className="about-text" style={{
-//                 fontSize: '18px',
+//               <div className="about-text" style={{ 
+//                 fontSize: '18px', 
 //                 lineHeight: '1.8',
 //                 color: 'var(--text-secondary)'
 //               }}>
 //                 <p style={{ marginBottom: '16px' }}>
-//                   I'm Arezki Cherfouh, a student developer and the <strong style={{ color: 'var(--accent-primary)' }}>Founder & CEO of Qwerify</strong>,
+//                   I'm Arezki Cherfouh, a student developer and the <strong style={{ color: 'var(--accent-primary)' }}>Founder & CEO of Qwerify</strong>, 
 //                   an independent tech project I started on July 19, 2025 to rethink how people connect and interact through technology.
 //                 </p>
 //                 <p style={{ marginBottom: '16px' }}>
-//                   Born on September 07, 2009 and passionate about AI and innovation. Qwerify is currently in development —
-//                   not yet a registered company — but it represents my long-term vision of building a global technology brand
-//                   that expands beyond communication into AI-driven systems, productivity tools, and scalable digital experiences
+//                   Born on September 07, 2009 and passionate about AI and innovation. Qwerify is currently in development — 
+//                   not yet a registered company — but it represents my long-term vision of building a global technology brand 
+//                   that expands beyond communication into AI-driven systems, productivity tools, and scalable digital experiences 
 //                   that <strong style={{ color: 'var(--accent-primary)' }}>help people without distraction</strong>.
 //                 </p>
 //                 <p style={{ marginBottom: '16px' }}>
-//                   I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, C++, JavaScript/TypeScript, FastAPI, Node.js, SQL (PostgreSQL),
+//                   I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, C++, JavaScript/TypeScript, FastAPI, Node.js, SQL (PostgreSQL), 
 //                   ReactJS/React Native, HTML/CSS, Tailwind CSS & Bootstrap</strong>, with growing experience in system design and AI.
 //                 </p>
 //                 <p style={{ marginBottom: '16px' }}>
-//                   Through Qwerify, I've gained practical experience in full-stack development, real-time communication,
+//                   Through Qwerify, I've gained practical experience in full-stack development, real-time communication, 
 //                   secure authentication, and infrastructure scalability.
 //                 </p>
 //                 <p>
-//                   My long-term goal is to become a <strong style={{ color: 'var(--accent-primary)' }}>world-class AI engineer and CEO</strong>,
-//                   and to grow Qwerify into a global company that competes with leading tech innovators — guided by the principles
+//                   My long-term goal is to become a <strong style={{ color: 'var(--accent-primary)' }}>world-class AI engineer and CEO</strong>, 
+//                   and to grow Qwerify into a global company that competes with leading tech innovators — guided by the principles 
 //                   of privacy, focus, and human-centered design.
 //                 </p>
 //               </div>
 //             </div>
 
 //             {/* Current Focus */}
-//             <div className="glass-effect about-section" style={{
-//               padding: '40px',
+//             <div className="glass-effect about-section" style={{ 
+//               padding: '40px', 
 //               borderRadius: '16px'
 //             }}>
-//               <h3 className="current-focus-title cursor-pointer" style={{
-//                 fontSize: '28px',
+//               <h3 className="current-focus-title cursor-pointer" style={{ 
+//                 fontSize: '28px', 
 //                 marginBottom: '24px',
 //                 color: 'var(--accent-primary)',
 //                 fontFamily: '"Orbitron", monospace',
@@ -2606,8 +1507,8 @@ export default Portfolio;
 //               }}>
 //                 Current Focus
 //               </h3>
-//               <ul className="current-focus-list" style={{
-//                 listStyle: 'none',
+//               <ul className="current-focus-list" style={{ 
+//                 listStyle: 'none', 
 //                 fontSize: '18px',
 //                 lineHeight: '2',
 //                 color: 'var(--text-secondary)'
@@ -2629,8 +1530,8 @@ export default Portfolio;
 //         {/* Projects Section */}
 //         {activeTab === 'projects' && (
 //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-//             <h2 className="projects-title cursor-pointer" style={{
-//               fontSize: '48px',
+//             <h2 className="projects-title cursor-pointer" style={{ 
+//               fontSize: '48px', 
 //               marginBottom: '32px',
 //               fontFamily: '"Orbitron", monospace',
 //               color: 'var(--accent-primary)',
@@ -2640,8 +1541,8 @@ export default Portfolio;
 //               <Code2 size={40} style={{ display: 'inline', marginRight: '16px' }} />
 //               Projects Portfolio
 //             </h2>
-
-//             <div style={{
+            
+//             <div style={{ 
 //               marginBottom: '32px',
 //               textAlign: 'center'
 //             }}>
@@ -2664,14 +1565,14 @@ export default Portfolio;
 //               />
 //             </div>
 
-//             <div className="projects-grid" style={{
-//               display: 'grid',
-//               gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+//             <div className="projects-grid" style={{ 
+//               display: 'grid', 
+//               gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
 //               gap: '24px',
 //               marginBottom: '32px'
 //             }}>
 //               {loading ? (
-//                 <div style={{
+//                 <div style={{ 
 //                   gridColumn: '1 / -1',
 //                   textAlign: 'center',
 //                   padding: '60px',
@@ -2682,7 +1583,7 @@ export default Portfolio;
 //                 </div>
 //               ) : filteredRepos.length > 0 ? (
 //                 filteredRepos.map((repo, index) => (
-//                   <div
+//                   <div 
 //                     key={index}
 //                     className="project-card glass-effect cursor-pointer"
 //                     style={{
@@ -2692,13 +1593,13 @@ export default Portfolio;
 //                       animationDelay: `${index * 0.1}s`
 //                     }}
 //                   >
-//                     <div style={{
-//                       display: 'flex',
+//                     <div style={{ 
+//                       display: 'flex', 
 //                       justifyContent: 'space-between',
 //                       alignItems: 'start',
 //                       marginBottom: '16px'
 //                     }}>
-//                       <h3 className="project-title" style={{
+//                       <h3 className="project-title" style={{ 
 //                         fontSize: '24px',
 //                         color: 'var(--accent-primary)',
 //                         fontFamily: '"Orbitron", monospace',
@@ -2719,8 +1620,8 @@ export default Portfolio;
 //                         </div>
 //                       )}
 //                     </div>
-
-//                     <p className="project-description" style={{
+                    
+//                     <p className="project-description" style={{ 
 //                       color: 'var(--text-secondary)',
 //                       marginBottom: '20px',
 //                       lineHeight: '1.6',
@@ -2728,8 +1629,8 @@ export default Portfolio;
 //                     }}>
 //                       {repo.description || 'No description available'}
 //                     </p>
-
-//                     <div style={{
+                    
+//                     <div style={{ 
 //                       display: 'flex',
 //                       justifyContent: 'space-between',
 //                       alignItems: 'center',
@@ -2747,8 +1648,8 @@ export default Portfolio;
 //                           {repo.language}
 //                         </span>
 //                       )}
-
-//                       <a
+                      
+//                       <a 
 //                         href={repo.html_url}
 //                         target="_blank"
 //                         rel="noopener noreferrer"
@@ -2773,7 +1674,7 @@ export default Portfolio;
 //                   </div>
 //                 ))
 //               ) : (
-//                 <div style={{
+//                 <div style={{ 
 //                   gridColumn: '1 / -1',
 //                   textAlign: 'center',
 //                   padding: '60px',
@@ -2785,7 +1686,7 @@ export default Portfolio;
 //               )}
 //             </div>
 
-//             <div className="repos-summary" style={{
+//             <div className="repos-summary" style={{ 
 //               textAlign: 'center',
 //               marginTop: '48px',
 //               padding: '32px',
@@ -2793,14 +1694,14 @@ export default Portfolio;
 //               borderRadius: '16px',
 //               border: '1px solid var(--border-color)'
 //             }}>
-//               <p className="repos-text" style={{
+//               <p className="repos-text" style={{ 
 //                 fontSize: '18px',
 //                 color: 'var(--text-secondary)',
 //                 marginBottom: '16px'
 //               }}>
 //                 Total Repositories: <strong style={{ color: 'var(--accent-primary)' }}>{repos.length}</strong>
 //               </p>
-//               <a
+//               <a 
 //                 href="https://github.com/Arezki-Cherfouh?tab=repositories"
 //                 target="_blank"
 //                 rel="noopener noreferrer"
@@ -2829,8 +1730,8 @@ export default Portfolio;
 //         {/* Skills Section */}
 //         {activeTab === 'skills' && (
 //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-//             <h2 className="skills-section-title cursor-pointer" style={{
-//               fontSize: '48px',
+//             <h2 className="skills-section-title cursor-pointer" style={{ 
+//               fontSize: '48px', 
 //               marginBottom: '48px',
 //               fontFamily: '"Orbitron", monospace',
 //               color: 'var(--accent-primary)',
@@ -2839,13 +1740,13 @@ export default Portfolio;
 //             }}>
 //               Technical Expertise
 //             </h2>
-
-//             <div style={{
-//               display: 'grid',
+            
+//             <div style={{ 
+//               display: 'grid', 
 //               gap: '24px'
 //             }}>
 //               {skills.map((skill, index) => (
-//                 <div
+//                 <div 
 //                   key={index}
 //                   className="tech-card glass-effect skill-card cursor-pointer"
 //                   style={{
@@ -2854,7 +1755,7 @@ export default Portfolio;
 //                     animationDelay: `${index * 0.1}s`
 //                   }}
 //                 >
-//                   <div style={{
+//                   <div style={{ 
 //                     display: 'flex',
 //                     justifyContent: 'space-between',
 //                     alignItems: 'center',
@@ -2862,7 +1763,7 @@ export default Portfolio;
 //                   }}>
 //                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
 //                       <span className="skill-icon" style={{ fontSize: '32px' }}>{skill.icon}</span>
-//                       <h3 className="skill-name" style={{
+//                       <h3 className="skill-name" style={{ 
 //                         fontSize: '24px',
 //                         fontFamily: '"Orbitron", monospace',
 //                         color: 'var(--text-primary)'
@@ -2870,7 +1771,7 @@ export default Portfolio;
 //                         {skill.name}
 //                       </h3>
 //                     </div>
-//                     <span className="skill-percentage" style={{
+//                     <span className="skill-percentage" style={{ 
 //                       fontSize: '20px',
 //                       fontWeight: 700,
 //                       color: 'var(--accent-primary)'
@@ -2878,7 +1779,7 @@ export default Portfolio;
 //                       {skill.level}%
 //                     </span>
 //                   </div>
-
+                  
 //                   <div style={{
 //                     width: '100%',
 //                     height: '12px',
@@ -2887,7 +1788,7 @@ export default Portfolio;
 //                     overflow: 'hidden',
 //                     border: '1px solid var(--border-color)'
 //                   }}>
-//                     <div
+//                     <div 
 //                       className="skill-bar"
 //                       style={{
 //                         width: `${skill.level}%`,
@@ -2907,8 +1808,8 @@ export default Portfolio;
 //         {/* Contact Section */}
 //         {activeTab === 'contact' && (
 //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-//             <h2 className="contact-title cursor-pointer" style={{
-//               fontSize: '48px',
+//             <h2 className="contact-title cursor-pointer" style={{ 
+//               fontSize: '48px', 
 //               marginBottom: '32px',
 //               fontFamily: '"Orbitron", monospace',
 //               color: 'var(--accent-primary)',
@@ -2917,35 +1818,35 @@ export default Portfolio;
 //             }}>
 //               Get In Touch
 //             </h2>
-
-//             <div className="glass-effect contact-container" style={{
-//               padding: '60px',
+            
+//             <div className="glass-effect contact-container" style={{ 
+//               padding: '60px', 
 //               borderRadius: '16px',
 //               maxWidth: '800px',
 //               margin: '0 auto',
 //               textAlign: 'center'
 //             }}>
-//               <Mail className="contact-icon" size={64} style={{
+//               <Mail className="contact-icon" size={64} style={{ 
 //                 color: 'var(--accent-primary)',
 //                 marginBottom: '32px'
 //               }} />
-
-//               <p className="contact-description" style={{
+              
+//               <p className="contact-description" style={{ 
 //                 fontSize: '20px',
 //                 color: 'var(--text-secondary)',
 //                 marginBottom: '48px',
 //                 lineHeight: '1.8'
 //               }}>
-//                 Always open to collaborating with those who share the vision of creating technology
+//                 Always open to collaborating with those who share the vision of creating technology 
 //                 that empowers people — not distracts them.
 //               </p>
-
-//               <div style={{
+              
+//               <div style={{ 
 //                 display: 'grid',
 //                 gap: '24px',
 //                 marginTop: '48px'
 //               }}>
-//                 <a
+//                 <a 
 //                   href="mailto:qwerify.ceo@gmail.com"
 //                   className="neon-border tech-card contact-link cursor-pointer"
 //                   style={{
@@ -2965,8 +1866,8 @@ export default Portfolio;
 //                   <Mail size={28} />
 //                   <span>Email: qwerify.ceo@gmail.com</span>
 //                 </a>
-
-//                 <a
+                
+//                 <a 
 //                   href="https://github.com/Arezki-Cherfouh"
 //                   target="_blank"
 //                   rel="noopener noreferrer"
@@ -2988,8 +1889,8 @@ export default Portfolio;
 //                   <Github size={28} />
 //                   <span>GitHub: @Arezki-Cherfouh</span>
 //                 </a>
-
-//                 <a
+                
+//                 <a 
 //                   href="https://www.linkedin.com/in/arezki-cherfouh"
 //                   target="_blank"
 //                   rel="noopener noreferrer"
@@ -3011,8 +1912,8 @@ export default Portfolio;
 //                   <Linkedin size={28} />
 //                   <span>LinkedIn: Arezki Cherfouh</span>
 //                 </a>
-
-//                 <a
+                
+//                 <a 
 //                   href="https://qwerify.vercel.app"
 //                   target="_blank"
 //                   rel="noopener noreferrer"
@@ -3035,7 +1936,7 @@ export default Portfolio;
 //                   <span>Qwerify: qwerify.vercel.app</span>
 //                 </a>
 
-//                 <a
+//                 <a 
 //                   href="https://qwerify.vercel.app/profiles?user=1"
 //                   target="_blank"
 //                   rel="noopener noreferrer"
@@ -3064,20 +1965,20 @@ export default Portfolio;
 //       </main>
 
 //       {/* Footer */}
-//       <footer style={{
+//       <footer style={{ 
 //         borderTop: '1px solid var(--border-color)',
 //         padding: '40px 24px',
 //         textAlign: 'center',
 //         background: 'var(--bg-secondary)',
 //         width: '100%'
 //       }}>
-//         <p className="footer-text" style={{
+//         <p className="footer-text" style={{ 
 //           color: 'var(--text-secondary)',
 //           fontSize: '16px'
 //         }}>
 //           © {new Date().getFullYear()} Arezki Cherfouh. Built with React & Tailwind CSS.
 //         </p>
-//         <p className="footer-subtext" style={{
+//         <p className="footer-subtext" style={{ 
 //           color: 'var(--text-secondary)',
 //           fontSize: '14px',
 //           marginTop: '8px'
@@ -3090,6 +1991,11 @@ export default Portfolio;
 // };
 
 // export default Portfolio;
+
+
+
+
+
 
 // // import React, { useState, useEffect } from 'react';
 // // import { useLocation, Link } from 'react-router-dom';
@@ -3141,7 +2047,7 @@ export default Portfolio;
 // //       try {
 // //         const response = await fetch('https://api.github.com/users/Arezki-Cherfouh/repos?per_page=100&sort=updated');
 // //         const data = await response.json();
-
+        
 // //         setRepos(data);
 // //       } catch (error) {
 // //         console.error('Error fetching repos:', error);
@@ -3497,7 +2403,7 @@ export default Portfolio;
 // //   );
 
 // //   return (
-// //     <div className="min-h-screen transition-colors duration-500" style={{
+// //     <div className="min-h-screen transition-colors duration-500" style={{ 
 // //       background: 'var(--bg-primary)',
 // //       color: 'var(--text-primary)',
 // //       fontFamily: '"JetBrains Mono", "Fira Code", monospace',
@@ -3505,7 +2411,7 @@ export default Portfolio;
 // //     }}>
 // //       <style>{`
 // //         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&display=swap');
-
+        
 // //         :root {
 // //           --bg-primary: #0a0e17;
 // //           --bg-secondary: #151921;
@@ -3577,10 +2483,10 @@ export default Portfolio;
 // //         }
 
 // //         @keyframes pulseGlow {
-// //           0%, 100% {
+// //           0%, 100% { 
 // //             box-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow);
 // //           }
-// //           50% {
+// //           50% { 
 // //             box-shadow: 0 0 40px var(--accent-glow), 0 0 80px var(--accent-glow);
 // //           }
 // //         }
@@ -3608,7 +2514,7 @@ export default Portfolio;
 // //         }
 
 // //         .grid-bg {
-// //           background-image:
+// //           background-image: 
 // //             linear-gradient(var(--border-color) 1px, transparent 1px),
 // //             linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
 // //           background-size: 50px 50px;
@@ -3910,22 +2816,22 @@ export default Portfolio;
 // //       </div>
 
 // //       {/* Header */}
-// //       <header className="glass-effect" style={{
-// //         position: 'sticky',
-// //         top: 0,
+// //       <header className="glass-effect" style={{ 
+// //         position: 'sticky', 
+// //         top: 0, 
 // //         zIndex: 50,
 // //         padding: '20px 0',
 // //         borderBottom: '1px solid var(--border-color)'
 // //       }}>
-// //         <nav className="header-nav" style={{
-// //           margin: '0 auto',
+// //         <nav className="header-nav" style={{  
+// //           margin: '0 auto', 
 // //           padding: '0 24px',
 // //           display: 'flex',
 // //           justifyContent: 'space-between',
 // //           alignItems: 'center'
 // //         }}>
-// //           <div className="header-logo" style={{
-// //             fontSize: '28px',
+// //           <div className="header-logo" style={{ 
+// //             fontSize: '28px', 
 // //             fontWeight: 700,
 // //             fontFamily: '"Orbitron", monospace',
 // //             background: `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`,
@@ -3938,7 +2844,7 @@ export default Portfolio;
 // //             <Terminal size={32} style={{cursor: hasMouse ? 'pointer' : 'default'}} />
 // //             <span className="glow-text" style={{userSelect: 'none',cursor: hasMouse ? 'pointer' : 'default'}}>AC</span>
 // //           </div>
-
+          
 // //           <div className="nav-tabs" style={{ display: 'flex', gap: '32px' }}>
 // //             {['about', 'projects', 'skills', 'contact'].map(tab => (
 // //               <Link
@@ -3971,10 +2877,10 @@ export default Portfolio;
 // //         {activeTab === 'about' && (
 // //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
 // //             {/* Profile Picture */}
-// //             <div style={{
-// //               display: 'flex',
-// //               justifyContent: 'center',
-// //               marginBottom: '48px'
+// //             <div style={{ 
+// //               display: 'flex', 
+// //               justifyContent: 'center', 
+// //               marginBottom: '48px' 
 // //             }}>
 // //               <div style={{ position: 'relative' }}>
 // //                 <div className="pulse-glow profile-picture-container" style={{
@@ -3986,7 +2892,7 @@ export default Portfolio;
 // //                   background: `linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary))`,
 // //                   cursor: hasMouse ? 'pointer' : 'default'
 // //                 }}>
-// //                   <img
+// //                   <img 
 // //                     src="https://avatars.githubusercontent.com/u/195492204?v=4"
 // //                     alt="Arezki Cherfouh"
 // //                     style={{
@@ -4015,8 +2921,8 @@ export default Portfolio;
 
 // //             {/* Name and Title */}
 // //             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-// //               <h1 className="main-title" style={{
-// //                 fontSize: '56px',
+// //               <h1 className="main-title" style={{ 
+// //                 fontSize: '56px', 
 // //                 fontWeight: 900,
 // //                 marginBottom: '16px',
 // //                 fontFamily: '"Orbitron", monospace',
@@ -4028,8 +2934,8 @@ export default Portfolio;
 // //               }} >
 // //                 AREZKI CHERFOUH
 // //               </h1>
-// //               <p className="main-subtitle" style={{
-// //                 fontSize: '24px',
+// //               <p className="main-subtitle" style={{ 
+// //                 fontSize: '24px', 
 // //                 color: 'var(--text-secondary)',
 // //                 marginBottom: '24px',
 // //                 fontWeight: 600,
@@ -4038,16 +2944,16 @@ export default Portfolio;
 // //               }}>
 // //                 Founder & CEO of Qwerify | Software Engineer | AI Enthusiast
 // //               </p>
-// //               <div className="social-links" style={{
-// //                 display: 'flex',
-// //                 justifyContent: 'center',
+// //               <div className="social-links" style={{ 
+// //                 display: 'flex', 
+// //                 justifyContent: 'center', 
 // //                 gap: '24px',
 // //                 marginTop: '32px'
 // //               }}>
-// //                 <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer"
+// //                 <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer" 
 // //                    className="neon-border social-link"
-// //                    style={{
-// //                      padding: '12px 24px',
+// //                    style={{ 
+// //                      padding: '12px 24px', 
 // //                      borderRadius: '8px',
 // //                      display: 'flex',
 // //                      alignItems: 'center',
@@ -4062,8 +2968,8 @@ export default Portfolio;
 // //                 </a>
 // //                 <a href="https://www.linkedin.com/in/arezki-cherfouh" target="_blank" rel="noopener noreferrer"
 // //                    className="neon-border social-link"
-// //                    style={{
-// //                      padding: '12px 24px',
+// //                    style={{ 
+// //                      padding: '12px 24px', 
 // //                      borderRadius: '8px',
 // //                      display: 'flex',
 // //                      alignItems: 'center',
@@ -4078,8 +2984,8 @@ export default Portfolio;
 // //                 </a>
 // //                 <a href="https://qwerify.vercel.app" target="_blank" rel="noopener noreferrer"
 // //                    className="neon-border social-link"
-// //                    style={{
-// //                      padding: '12px 24px',
+// //                    style={{ 
+// //                      padding: '12px 24px', 
 // //                      borderRadius: '8px',
 // //                      display: 'flex',
 // //                      alignItems: 'center',
@@ -4096,13 +3002,13 @@ export default Portfolio;
 // //             </div>
 
 // //             {/* Bio */}
-// //             <div className="glass-effect scan-line about-section" style={{
-// //               padding: '40px',
+// //             <div className="glass-effect scan-line about-section" style={{ 
+// //               padding: '40px', 
 // //               borderRadius: '16px',
 // //               marginBottom: '32px'
 // //             }}>
-// //               <h2 className="section-title" style={{
-// //                 fontSize: '32px',
+// //               <h2 className="section-title" style={{ 
+// //                 fontSize: '32px', 
 // //                 marginBottom: '24px',
 // //                 color: 'var(--accent-primary)',
 // //                 fontFamily: '"Orbitron", monospace',
@@ -4112,44 +3018,44 @@ export default Portfolio;
 // //                 <Sparkles size={28} style={{ display: 'inline', marginRight: '12px' }} />
 // //                 About Me
 // //               </h2>
-// //               <div className="about-text" style={{
-// //                 fontSize: '18px',
+// //               <div className="about-text" style={{ 
+// //                 fontSize: '18px', 
 // //                 lineHeight: '1.8',
 // //                 color: 'var(--text-secondary)'
 // //               }}>
 // //                 <p style={{ marginBottom: '16px' }}>
-// //                   I'm Arezki Cherfouh, a student developer and the <strong style={{ color: 'var(--accent-primary)' }}>Founder & CEO of Qwerify</strong>,
+// //                   I'm Arezki Cherfouh, a student developer and the <strong style={{ color: 'var(--accent-primary)' }}>Founder & CEO of Qwerify</strong>, 
 // //                   an independent tech project I started on July 19, 2025 to rethink how people connect and interact through technology.
 // //                 </p>
 // //                 <p style={{ marginBottom: '16px' }}>
-// //                   Born on September 07, 2009 and passionate about AI and innovation. Qwerify is currently in development —
-// //                   not yet a registered company — but it represents my long-term vision of building a global technology brand
-// //                   that expands beyond communication into AI-driven systems, productivity tools, and scalable digital experiences
+// //                   Born on September 07, 2009 and passionate about AI and innovation. Qwerify is currently in development — 
+// //                   not yet a registered company — but it represents my long-term vision of building a global technology brand 
+// //                   that expands beyond communication into AI-driven systems, productivity tools, and scalable digital experiences 
 // //                   that <strong style={{ color: 'var(--accent-primary)' }}>help people without distraction</strong>.
 // //                 </p>
 // //                 <p style={{ marginBottom: '16px' }}>
-// //                   I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, JavaScript, FastAPI, Node.js, SQL (PostgreSQL),
+// //                   I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, JavaScript, FastAPI, Node.js, SQL (PostgreSQL), 
 // //                   ReactJS/React Native, HTML/CSS, Tailwind CSS & Bootstrap</strong>, with growing experience in system design and AI.
 // //                 </p>
 // //                 <p style={{ marginBottom: '16px' }}>
-// //                   Through Qwerify, I've gained practical experience in full-stack development, real-time communication,
+// //                   Through Qwerify, I've gained practical experience in full-stack development, real-time communication, 
 // //                   secure authentication, and infrastructure scalability.
 // //                 </p>
 // //                 <p>
-// //                   My long-term goal is to become a <strong style={{ color: 'var(--accent-primary)' }}>world-class AI engineer and CEO</strong>,
-// //                   and to grow Qwerify into a global company that competes with leading tech innovators — guided by the principles
+// //                   My long-term goal is to become a <strong style={{ color: 'var(--accent-primary)' }}>world-class AI engineer and CEO</strong>, 
+// //                   and to grow Qwerify into a global company that competes with leading tech innovators — guided by the principles 
 // //                   of privacy, focus, and human-centered design.
 // //                 </p>
 // //               </div>
 // //             </div>
 
 // //             {/* Current Focus */}
-// //             <div className="glass-effect about-section" style={{
-// //               padding: '40px',
+// //             <div className="glass-effect about-section" style={{ 
+// //               padding: '40px', 
 // //               borderRadius: '16px'
 // //             }}>
-// //               <h3 className="current-focus-title" style={{
-// //                 fontSize: '28px',
+// //               <h3 className="current-focus-title" style={{ 
+// //                 fontSize: '28px', 
 // //                 marginBottom: '24px',
 // //                 color: 'var(--accent-primary)',
 // //                 fontFamily: '"Orbitron", monospace',
@@ -4158,8 +3064,8 @@ export default Portfolio;
 // //               }}>
 // //                 Current Focus
 // //               </h3>
-// //               <ul className="current-focus-list" style={{
-// //                 listStyle: 'none',
+// //               <ul className="current-focus-list" style={{ 
+// //                 listStyle: 'none', 
 // //                 fontSize: '18px',
 // //                 lineHeight: '2',
 // //                 color: 'var(--text-secondary)'
@@ -4181,8 +3087,8 @@ export default Portfolio;
 // //         {/* Projects Section */}
 // //         {activeTab === 'projects' && (
 // //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-// //             <h2 className="projects-title" style={{
-// //               fontSize: '48px',
+// //             <h2 className="projects-title" style={{ 
+// //               fontSize: '48px', 
 // //               marginBottom: '32px',
 // //               fontFamily: '"Orbitron", monospace',
 // //               color: 'var(--accent-primary)',
@@ -4193,8 +3099,8 @@ export default Portfolio;
 // //               <Code2 size={40} style={{ display: 'inline', marginRight: '16px' }} />
 // //               Projects Portfolio
 // //             </h2>
-
-// //             <div style={{
+            
+// //             <div style={{ 
 // //               marginBottom: '32px',
 // //               textAlign: 'center'
 // //             }}>
@@ -4217,14 +3123,14 @@ export default Portfolio;
 // //               />
 // //             </div>
 
-// //             <div className="projects-grid" style={{
-// //               display: 'grid',
-// //               gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+// //             <div className="projects-grid" style={{ 
+// //               display: 'grid', 
+// //               gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
 // //               gap: '24px',
 // //               marginBottom: '32px'
 // //             }}>
 // //               {loading ? (
-// //                 <div style={{
+// //                 <div style={{ 
 // //                   gridColumn: '1 / -1',
 // //                   textAlign: 'center',
 // //                   padding: '60px',
@@ -4235,7 +3141,7 @@ export default Portfolio;
 // //                 </div>
 // //               ) : filteredRepos.length > 0 ? (
 // //                 filteredRepos.map((repo, index) => (
-// //                   <div
+// //                   <div 
 // //                     key={index}
 // //                     className="project-card glass-effect"
 // //                     style={{
@@ -4246,13 +3152,13 @@ export default Portfolio;
 // //                       cursor: hasMouse ? 'pointer' : 'default'
 // //                     }}
 // //                   >
-// //                     <div style={{
-// //                       display: 'flex',
+// //                     <div style={{ 
+// //                       display: 'flex', 
 // //                       justifyContent: 'space-between',
 // //                       alignItems: 'start',
 // //                       marginBottom: '16px'
 // //                     }}>
-// //                       <h3 className="project-title" style={{
+// //                       <h3 className="project-title" style={{ 
 // //                         fontSize: '24px',
 // //                         color: 'var(--accent-primary)',
 // //                         fontFamily: '"Orbitron", monospace',
@@ -4273,8 +3179,8 @@ export default Portfolio;
 // //                         </div>
 // //                       )}
 // //                     </div>
-
-// //                     <p className="project-description" style={{
+                    
+// //                     <p className="project-description" style={{ 
 // //                       color: 'var(--text-secondary)',
 // //                       marginBottom: '20px',
 // //                       lineHeight: '1.6',
@@ -4282,8 +3188,8 @@ export default Portfolio;
 // //                     }}>
 // //                       {repo.description || 'No description available'}
 // //                     </p>
-
-// //                     <div style={{
+                    
+// //                     <div style={{ 
 // //                       display: 'flex',
 // //                       justifyContent: 'space-between',
 // //                       alignItems: 'center',
@@ -4301,8 +3207,8 @@ export default Portfolio;
 // //                           {repo.language}
 // //                         </span>
 // //                       )}
-
-// //                       <a
+                      
+// //                       <a 
 // //                         href={repo.html_url}
 // //                         target="_blank"
 // //                         rel="noopener noreferrer"
@@ -4327,7 +3233,7 @@ export default Portfolio;
 // //                   </div>
 // //                 ))
 // //               ) : (
-// //                 <div style={{
+// //                 <div style={{ 
 // //                   gridColumn: '1 / -1',
 // //                   textAlign: 'center',
 // //                   padding: '60px',
@@ -4339,7 +3245,7 @@ export default Portfolio;
 // //               )}
 // //             </div>
 
-// //             <div className="repos-summary" style={{
+// //             <div className="repos-summary" style={{ 
 // //               textAlign: 'center',
 // //               marginTop: '48px',
 // //               padding: '32px',
@@ -4347,14 +3253,14 @@ export default Portfolio;
 // //               borderRadius: '16px',
 // //               border: '1px solid var(--border-color)'
 // //             }}>
-// //               <p className="repos-text" style={{
+// //               <p className="repos-text" style={{ 
 // //                 fontSize: '18px',
 // //                 color: 'var(--text-secondary)',
 // //                 marginBottom: '16px'
 // //               }}>
 // //                 Total Repositories: <strong style={{ color: 'var(--accent-primary)' }}>{repos.length}</strong>
 // //               </p>
-// //               <a
+// //               <a 
 // //                 href="https://github.com/Arezki-Cherfouh?tab=repositories"
 // //                 target="_blank"
 // //                 rel="noopener noreferrer"
@@ -4383,8 +3289,8 @@ export default Portfolio;
 // //         {/* Skills Section */}
 // //         {activeTab === 'skills' && (
 // //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-// //             <h2 className="skills-section-title" style={{
-// //               fontSize: '48px',
+// //             <h2 className="skills-section-title" style={{ 
+// //               fontSize: '48px', 
 // //               marginBottom: '48px',
 // //               fontFamily: '"Orbitron", monospace',
 // //               color: 'var(--accent-primary)',
@@ -4394,13 +3300,13 @@ export default Portfolio;
 // //             }}>
 // //               Technical Expertise
 // //             </h2>
-
-// //             <div style={{
-// //               display: 'grid',
+            
+// //             <div style={{ 
+// //               display: 'grid', 
 // //               gap: '24px'
 // //             }}>
 // //               {skills.map((skill, index) => (
-// //                 <div
+// //                 <div 
 // //                   key={index}
 // //                   className="tech-card glass-effect skill-card"
 // //                   style={{
@@ -4410,7 +3316,7 @@ export default Portfolio;
 // //                     cursor: hasMouse ? 'pointer' : 'default'
 // //                   }}
 // //                 >
-// //                   <div style={{
+// //                   <div style={{ 
 // //                     display: 'flex',
 // //                     justifyContent: 'space-between',
 // //                     alignItems: 'center',
@@ -4418,7 +3324,7 @@ export default Portfolio;
 // //                   }}>
 // //                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
 // //                       <span className="skill-icon" style={{ fontSize: '32px' }}>{skill.icon}</span>
-// //                       <h3 className="skill-name" style={{
+// //                       <h3 className="skill-name" style={{ 
 // //                         fontSize: '24px',
 // //                         fontFamily: '"Orbitron", monospace',
 // //                         color: 'var(--text-primary)'
@@ -4426,7 +3332,7 @@ export default Portfolio;
 // //                         {skill.name}
 // //                       </h3>
 // //                     </div>
-// //                     <span className="skill-percentage" style={{
+// //                     <span className="skill-percentage" style={{ 
 // //                       fontSize: '20px',
 // //                       fontWeight: 700,
 // //                       color: 'var(--accent-primary)'
@@ -4434,7 +3340,7 @@ export default Portfolio;
 // //                       {skill.level}%
 // //                     </span>
 // //                   </div>
-
+                  
 // //                   <div style={{
 // //                     width: '100%',
 // //                     height: '12px',
@@ -4443,7 +3349,7 @@ export default Portfolio;
 // //                     overflow: 'hidden',
 // //                     border: '1px solid var(--border-color)'
 // //                   }}>
-// //                     <div
+// //                     <div 
 // //                       className="skill-bar"
 // //                       style={{
 // //                         width: `${skill.level}%`,
@@ -4463,8 +3369,8 @@ export default Portfolio;
 // //         {/* Contact Section */}
 // //         {activeTab === 'contact' && (
 // //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-// //             <h2 className="contact-title" style={{
-// //               fontSize: '48px',
+// //             <h2 className="contact-title" style={{ 
+// //               fontSize: '48px', 
 // //               marginBottom: '32px',
 // //               fontFamily: '"Orbitron", monospace',
 // //               color: 'var(--accent-primary)',
@@ -4474,35 +3380,35 @@ export default Portfolio;
 // //             }}>
 // //               Get In Touch
 // //             </h2>
-
-// //             <div className="glass-effect contact-container" style={{
-// //               padding: '60px',
+            
+// //             <div className="glass-effect contact-container" style={{ 
+// //               padding: '60px', 
 // //               borderRadius: '16px',
 // //               maxWidth: '800px',
 // //               margin: '0 auto',
 // //               textAlign: 'center'
 // //             }}>
-// //               <Mail className="contact-icon" size={64} style={{
+// //               <Mail className="contact-icon" size={64} style={{ 
 // //                 color: 'var(--accent-primary)',
 // //                 marginBottom: '32px'
 // //               }} />
-
-// //               <p className="contact-description" style={{
+              
+// //               <p className="contact-description" style={{ 
 // //                 fontSize: '20px',
 // //                 color: 'var(--text-secondary)',
 // //                 marginBottom: '48px',
 // //                 lineHeight: '1.8'
 // //               }}>
-// //                 Always open to collaborating with those who share the vision of creating technology
+// //                 Always open to collaborating with those who share the vision of creating technology 
 // //                 that empowers people — not distracts them.
 // //               </p>
-
-// //               <div style={{
+              
+// //               <div style={{ 
 // //                 display: 'grid',
 // //                 gap: '24px',
 // //                 marginTop: '48px'
 // //               }}>
-// //                 <a
+// //                 <a 
 // //                   href="mailto:qwerify.ceo@gmail.com"
 // //                   className="neon-border tech-card contact-link"
 // //                   style={{
@@ -4522,8 +3428,8 @@ export default Portfolio;
 // //                   <Mail size={28} />
 // //                   <span>Email: qwerify.ceo@gmail.com</span>
 // //                 </a>
-
-// //                 <a
+                
+// //                 <a 
 // //                   href="https://github.com/Arezki-Cherfouh"
 // //                   target="_blank"
 // //                   rel="noopener noreferrer"
@@ -4545,8 +3451,8 @@ export default Portfolio;
 // //                   <Github size={28} />
 // //                   <span>GitHub: @Arezki-Cherfouh</span>
 // //                 </a>
-
-// //                 <a
+                
+// //                 <a 
 // //                   href="https://www.linkedin.com/in/arezki-cherfouh"
 // //                   target="_blank"
 // //                   rel="noopener noreferrer"
@@ -4568,8 +3474,8 @@ export default Portfolio;
 // //                   <Linkedin size={28} />
 // //                   <span>LinkedIn: Arezki Cherfouh</span>
 // //                 </a>
-
-// //                 <a
+                
+// //                 <a 
 // //                   href="https://qwerify.vercel.app"
 // //                   target="_blank"
 // //                   rel="noopener noreferrer"
@@ -4592,7 +3498,7 @@ export default Portfolio;
 // //                   <span>Qwerify: qwerify.vercel.app</span>
 // //                 </a>
 
-// //                 <a
+// //                 <a 
 // //                   href="https://qwerify.vercel.app/profiles?user=1"
 // //                   target="_blank"
 // //                   rel="noopener noreferrer"
@@ -4621,19 +3527,19 @@ export default Portfolio;
 // //       </main>
 
 // //       {/* Footer */}
-// //       <footer style={{
+// //       <footer style={{ 
 // //         borderTop: '1px solid var(--border-color)',
 // //         padding: '40px 24px',
 // //         textAlign: 'center',
 // //         background: 'var(--bg-secondary)'
 // //       }}>
-// //         <p className="footer-text" style={{
+// //         <p className="footer-text" style={{ 
 // //           color: 'var(--text-secondary)',
 // //           fontSize: '16px'
 // //         }}>
 // //           © {new Date().getFullYear()} Arezki Cherfouh. Built with React & Tailwind CSS.
 // //         </p>
-// //         <p className="footer-subtext" style={{
+// //         <p className="footer-subtext" style={{ 
 // //           color: 'var(--text-secondary)',
 // //           fontSize: '14px',
 // //           marginTop: '8px'
@@ -4646,6 +3552,9 @@ export default Portfolio;
 // // };
 
 // // export default Portfolio;
+
+
+
 
 // import React, { useState, useEffect } from 'react';
 // import { useLocation, Link } from 'react-router-dom';
@@ -4697,7 +3606,7 @@ export default Portfolio;
 //       try {
 //         const response = await fetch('https://api.github.com/users/Arezki-Cherfouh/repos?per_page=100&sort=updated');
 //         const data = await response.json();
-
+        
 //         setRepos(data);
 //       } catch (error) {
 //         console.error('Error fetching repos:', error);
@@ -5053,7 +3962,7 @@ export default Portfolio;
 //   );
 
 //   return (
-//     <div className="min-h-screen transition-colors duration-500" style={{
+//     <div className="min-h-screen transition-colors duration-500" style={{ 
 //       background: 'var(--bg-primary)',
 //       color: 'var(--text-primary)',
 //       fontFamily: '"JetBrains Mono", "Fira Code", monospace',
@@ -5065,7 +3974,7 @@ export default Portfolio;
 //     }}>
 //       <style>{`
 //         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&display=swap');
-
+        
 //         :root {
 //           --bg-primary: #0a0e17;
 //           --bg-secondary: #151921;
@@ -5146,10 +4055,10 @@ export default Portfolio;
 //         }
 
 //         @keyframes pulseGlow {
-//           0%, 100% {
+//           0%, 100% { 
 //             box-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow);
 //           }
-//           50% {
+//           50% { 
 //             box-shadow: 0 0 40px var(--accent-glow), 0 0 80px var(--accent-glow);
 //           }
 //         }
@@ -5177,7 +4086,7 @@ export default Portfolio;
 //         }
 
 //         .grid-bg {
-//           background-image:
+//           background-image: 
 //             linear-gradient(var(--border-color) 1px, transparent 1px),
 //             linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
 //           background-size: 50px 50px;
@@ -5479,16 +4388,16 @@ export default Portfolio;
 //       </div>
 
 //       {/* Header */}
-//       <header className="glass-effect" style={{
-//         position: 'sticky',
-//         top: 0,
+//       <header className="glass-effect" style={{ 
+//         position: 'sticky', 
+//         top: 0, 
 //         zIndex: 50,
 //         padding: '20px 0',
 //         borderBottom: '1px solid var(--border-color)',
 //         width: '100%'
 //       }}>
-//         <nav className="header-nav" style={{
-//           margin: '0 auto',
+//         <nav className="header-nav" style={{  
+//           margin: '0 auto', 
 //           padding: '0 24px',
 //           display: 'flex',
 //           justifyContent: 'space-between',
@@ -5496,8 +4405,8 @@ export default Portfolio;
 //           width: '100%',
 //           maxWidth: '100%'
 //         }}>
-//           <div className="header-logo" style={{
-//             fontSize: '28px',
+//           <div className="header-logo" style={{ 
+//             fontSize: '28px', 
 //             fontWeight: 700,
 //             fontFamily: '"Orbitron", monospace',
 //             background: `linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))`,
@@ -5510,7 +4419,7 @@ export default Portfolio;
 //             <Terminal size={32} style={{cursor: hasMouse ? 'pointer' : 'default'}} />
 //             <span className="glow-text" style={{userSelect: 'none',cursor: hasMouse ? 'pointer' : 'default'}}>AC</span>
 //           </div>
-
+          
 //           <div className="nav-tabs" style={{ display: 'flex', gap: '32px' }}>
 //             {['about', 'projects', 'skills', 'contact'].map(tab => (
 //               <Link
@@ -5543,10 +4452,10 @@ export default Portfolio;
 //         {activeTab === 'about' && (
 //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
 //             {/* Profile Picture */}
-//             <div style={{
-//               display: 'flex',
-//               justifyContent: 'center',
-//               marginBottom: '48px'
+//             <div style={{ 
+//               display: 'flex', 
+//               justifyContent: 'center', 
+//               marginBottom: '48px' 
 //             }}>
 //               <div style={{ position: 'relative' }}>
 //                 <div className="pulse-glow profile-picture-container" style={{
@@ -5558,7 +4467,7 @@ export default Portfolio;
 //                   background: `linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary))`,
 //                   cursor: hasMouse ? 'pointer' : 'default'
 //                 }}>
-//                   <img
+//                   <img 
 //                     src="https://avatars.githubusercontent.com/u/195492204?v=4"
 //                     alt="Arezki Cherfouh"
 //                     style={{
@@ -5587,8 +4496,8 @@ export default Portfolio;
 
 //             {/* Name and Title */}
 //             <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-//               <h1 className="main-title" style={{
-//                 fontSize: '56px',
+//               <h1 className="main-title" style={{ 
+//                 fontSize: '56px', 
 //                 fontWeight: 900,
 //                 marginBottom: '16px',
 //                 fontFamily: '"Orbitron", monospace',
@@ -5600,8 +4509,8 @@ export default Portfolio;
 //               }} >
 //                 AREZKI CHERFOUH
 //               </h1>
-//               <p className="main-subtitle" style={{
-//                 fontSize: '24px',
+//               <p className="main-subtitle" style={{ 
+//                 fontSize: '24px', 
 //                 color: 'var(--text-secondary)',
 //                 marginBottom: '24px',
 //                 fontWeight: 600,
@@ -5610,16 +4519,16 @@ export default Portfolio;
 //               }}>
 //                 Founder & CEO of Qwerify | Software Engineer | AI Enthusiast
 //               </p>
-//               <div className="social-links" style={{
-//                 display: 'flex',
-//                 justifyContent: 'center',
+//               <div className="social-links" style={{ 
+//                 display: 'flex', 
+//                 justifyContent: 'center', 
 //                 gap: '24px',
 //                 marginTop: '32px'
 //               }}>
-//                 <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer"
+//                 <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer" 
 //                    className="neon-border social-link"
-//                    style={{
-//                      padding: '12px 24px',
+//                    style={{ 
+//                      padding: '12px 24px', 
 //                      borderRadius: '8px',
 //                      display: 'flex',
 //                      alignItems: 'center',
@@ -5634,8 +4543,8 @@ export default Portfolio;
 //                 </a>
 //                 <a href="https://www.linkedin.com/in/arezki-cherfouh" target="_blank" rel="noopener noreferrer"
 //                    className="neon-border social-link"
-//                    style={{
-//                      padding: '12px 24px',
+//                    style={{ 
+//                      padding: '12px 24px', 
 //                      borderRadius: '8px',
 //                      display: 'flex',
 //                      alignItems: 'center',
@@ -5650,8 +4559,8 @@ export default Portfolio;
 //                 </a>
 //                 <a href="https://qwerify.vercel.app" target="_blank" rel="noopener noreferrer"
 //                    className="neon-border social-link"
-//                    style={{
-//                      padding: '12px 24px',
+//                    style={{ 
+//                      padding: '12px 24px', 
 //                      borderRadius: '8px',
 //                      display: 'flex',
 //                      alignItems: 'center',
@@ -5668,13 +4577,13 @@ export default Portfolio;
 //             </div>
 
 //             {/* Bio */}
-//             <div className="glass-effect scan-line about-section" style={{
-//               padding: '40px',
+//             <div className="glass-effect scan-line about-section" style={{ 
+//               padding: '40px', 
 //               borderRadius: '16px',
 //               marginBottom: '32px'
 //             }}>
-//               <h2 className="section-title" style={{
-//                 fontSize: '32px',
+//               <h2 className="section-title" style={{ 
+//                 fontSize: '32px', 
 //                 marginBottom: '24px',
 //                 color: 'var(--accent-primary)',
 //                 fontFamily: '"Orbitron", monospace',
@@ -5684,44 +4593,44 @@ export default Portfolio;
 //                 <Sparkles size={28} style={{ display: 'inline', marginRight: '12px' }} />
 //                 About Me
 //               </h2>
-//               <div className="about-text" style={{
-//                 fontSize: '18px',
+//               <div className="about-text" style={{ 
+//                 fontSize: '18px', 
 //                 lineHeight: '1.8',
 //                 color: 'var(--text-secondary)'
 //               }}>
 //                 <p style={{ marginBottom: '16px' }}>
-//                   I'm Arezki Cherfouh, a student developer and the <strong style={{ color: 'var(--accent-primary)' }}>Founder & CEO of Qwerify</strong>,
+//                   I'm Arezki Cherfouh, a student developer and the <strong style={{ color: 'var(--accent-primary)' }}>Founder & CEO of Qwerify</strong>, 
 //                   an independent tech project I started on July 19, 2025 to rethink how people connect and interact through technology.
 //                 </p>
 //                 <p style={{ marginBottom: '16px' }}>
-//                   Born on September 07, 2009 and passionate about AI and innovation. Qwerify is currently in development —
-//                   not yet a registered company — but it represents my long-term vision of building a global technology brand
-//                   that expands beyond communication into AI-driven systems, productivity tools, and scalable digital experiences
+//                   Born on September 07, 2009 and passionate about AI and innovation. Qwerify is currently in development — 
+//                   not yet a registered company — but it represents my long-term vision of building a global technology brand 
+//                   that expands beyond communication into AI-driven systems, productivity tools, and scalable digital experiences 
 //                   that <strong style={{ color: 'var(--accent-primary)' }}>help people without distraction</strong>.
 //                 </p>
 //                 <p style={{ marginBottom: '16px' }}>
-//                   I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, JavaScript, FastAPI, Node.js, SQL (PostgreSQL),
+//                   I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, JavaScript, FastAPI, Node.js, SQL (PostgreSQL), 
 //                   ReactJS/React Native, HTML/CSS, Tailwind CSS & Bootstrap</strong>, with growing experience in system design and AI.
 //                 </p>
 //                 <p style={{ marginBottom: '16px' }}>
-//                   Through Qwerify, I've gained practical experience in full-stack development, real-time communication,
+//                   Through Qwerify, I've gained practical experience in full-stack development, real-time communication, 
 //                   secure authentication, and infrastructure scalability.
 //                 </p>
 //                 <p>
-//                   My long-term goal is to become a <strong style={{ color: 'var(--accent-primary)' }}>world-class AI engineer and CEO</strong>,
-//                   and to grow Qwerify into a global company that competes with leading tech innovators — guided by the principles
+//                   My long-term goal is to become a <strong style={{ color: 'var(--accent-primary)' }}>world-class AI engineer and CEO</strong>, 
+//                   and to grow Qwerify into a global company that competes with leading tech innovators — guided by the principles 
 //                   of privacy, focus, and human-centered design.
 //                 </p>
 //               </div>
 //             </div>
 
 //             {/* Current Focus */}
-//             <div className="glass-effect about-section" style={{
-//               padding: '40px',
+//             <div className="glass-effect about-section" style={{ 
+//               padding: '40px', 
 //               borderRadius: '16px'
 //             }}>
-//               <h3 className="current-focus-title" style={{
-//                 fontSize: '28px',
+//               <h3 className="current-focus-title" style={{ 
+//                 fontSize: '28px', 
 //                 marginBottom: '24px',
 //                 color: 'var(--accent-primary)',
 //                 fontFamily: '"Orbitron", monospace',
@@ -5730,8 +4639,8 @@ export default Portfolio;
 //               }}>
 //                 Current Focus
 //               </h3>
-//               <ul className="current-focus-list" style={{
-//                 listStyle: 'none',
+//               <ul className="current-focus-list" style={{ 
+//                 listStyle: 'none', 
 //                 fontSize: '18px',
 //                 lineHeight: '2',
 //                 color: 'var(--text-secondary)'
@@ -5753,8 +4662,8 @@ export default Portfolio;
 //         {/* Projects Section */}
 //         {activeTab === 'projects' && (
 //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-//             <h2 className="projects-title" style={{
-//               fontSize: '48px',
+//             <h2 className="projects-title" style={{ 
+//               fontSize: '48px', 
 //               marginBottom: '32px',
 //               fontFamily: '"Orbitron", monospace',
 //               color: 'var(--accent-primary)',
@@ -5765,8 +4674,8 @@ export default Portfolio;
 //               <Code2 size={40} style={{ display: 'inline', marginRight: '16px' }} />
 //               Projects Portfolio
 //             </h2>
-
-//             <div style={{
+            
+//             <div style={{ 
 //               marginBottom: '32px',
 //               textAlign: 'center'
 //             }}>
@@ -5789,14 +4698,14 @@ export default Portfolio;
 //               />
 //             </div>
 
-//             <div className="projects-grid" style={{
-//               display: 'grid',
-//               gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+//             <div className="projects-grid" style={{ 
+//               display: 'grid', 
+//               gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', 
 //               gap: '24px',
 //               marginBottom: '32px'
 //             }}>
 //               {loading ? (
-//                 <div style={{
+//                 <div style={{ 
 //                   gridColumn: '1 / -1',
 //                   textAlign: 'center',
 //                   padding: '60px',
@@ -5807,7 +4716,7 @@ export default Portfolio;
 //                 </div>
 //               ) : filteredRepos.length > 0 ? (
 //                 filteredRepos.map((repo, index) => (
-//                   <div
+//                   <div 
 //                     key={index}
 //                     className="project-card glass-effect"
 //                     style={{
@@ -5818,13 +4727,13 @@ export default Portfolio;
 //                       cursor: hasMouse ? 'pointer' : 'default'
 //                     }}
 //                   >
-//                     <div style={{
-//                       display: 'flex',
+//                     <div style={{ 
+//                       display: 'flex', 
 //                       justifyContent: 'space-between',
 //                       alignItems: 'start',
 //                       marginBottom: '16px'
 //                     }}>
-//                       <h3 className="project-title" style={{
+//                       <h3 className="project-title" style={{ 
 //                         fontSize: '24px',
 //                         color: 'var(--accent-primary)',
 //                         fontFamily: '"Orbitron", monospace',
@@ -5845,8 +4754,8 @@ export default Portfolio;
 //                         </div>
 //                       )}
 //                     </div>
-
-//                     <p className="project-description" style={{
+                    
+//                     <p className="project-description" style={{ 
 //                       color: 'var(--text-secondary)',
 //                       marginBottom: '20px',
 //                       lineHeight: '1.6',
@@ -5854,8 +4763,8 @@ export default Portfolio;
 //                     }}>
 //                       {repo.description || 'No description available'}
 //                     </p>
-
-//                     <div style={{
+                    
+//                     <div style={{ 
 //                       display: 'flex',
 //                       justifyContent: 'space-between',
 //                       alignItems: 'center',
@@ -5873,8 +4782,8 @@ export default Portfolio;
 //                           {repo.language}
 //                         </span>
 //                       )}
-
-//                       <a
+                      
+//                       <a 
 //                         href={repo.html_url}
 //                         target="_blank"
 //                         rel="noopener noreferrer"
@@ -5899,7 +4808,7 @@ export default Portfolio;
 //                   </div>
 //                 ))
 //               ) : (
-//                 <div style={{
+//                 <div style={{ 
 //                   gridColumn: '1 / -1',
 //                   textAlign: 'center',
 //                   padding: '60px',
@@ -5911,7 +4820,7 @@ export default Portfolio;
 //               )}
 //             </div>
 
-//             <div className="repos-summary" style={{
+//             <div className="repos-summary" style={{ 
 //               textAlign: 'center',
 //               marginTop: '48px',
 //               padding: '32px',
@@ -5919,14 +4828,14 @@ export default Portfolio;
 //               borderRadius: '16px',
 //               border: '1px solid var(--border-color)'
 //             }}>
-//               <p className="repos-text" style={{
+//               <p className="repos-text" style={{ 
 //                 fontSize: '18px',
 //                 color: 'var(--text-secondary)',
 //                 marginBottom: '16px'
 //               }}>
 //                 Total Repositories: <strong style={{ color: 'var(--accent-primary)' }}>{repos.length}</strong>
 //               </p>
-//               <a
+//               <a 
 //                 href="https://github.com/Arezki-Cherfouh?tab=repositories"
 //                 target="_blank"
 //                 rel="noopener noreferrer"
@@ -5955,8 +4864,8 @@ export default Portfolio;
 //         {/* Skills Section */}
 //         {activeTab === 'skills' && (
 //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-//             <h2 className="skills-section-title" style={{
-//               fontSize: '48px',
+//             <h2 className="skills-section-title" style={{ 
+//               fontSize: '48px', 
 //               marginBottom: '48px',
 //               fontFamily: '"Orbitron", monospace',
 //               color: 'var(--accent-primary)',
@@ -5966,13 +4875,13 @@ export default Portfolio;
 //             }}>
 //               Technical Expertise
 //             </h2>
-
-//             <div style={{
-//               display: 'grid',
+            
+//             <div style={{ 
+//               display: 'grid', 
 //               gap: '24px'
 //             }}>
 //               {skills.map((skill, index) => (
-//                 <div
+//                 <div 
 //                   key={index}
 //                   className="tech-card glass-effect skill-card"
 //                   style={{
@@ -5982,7 +4891,7 @@ export default Portfolio;
 //                     cursor: hasMouse ? 'pointer' : 'default'
 //                   }}
 //                 >
-//                   <div style={{
+//                   <div style={{ 
 //                     display: 'flex',
 //                     justifyContent: 'space-between',
 //                     alignItems: 'center',
@@ -5990,7 +4899,7 @@ export default Portfolio;
 //                   }}>
 //                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
 //                       <span className="skill-icon" style={{ fontSize: '32px' }}>{skill.icon}</span>
-//                       <h3 className="skill-name" style={{
+//                       <h3 className="skill-name" style={{ 
 //                         fontSize: '24px',
 //                         fontFamily: '"Orbitron", monospace',
 //                         color: 'var(--text-primary)'
@@ -5998,7 +4907,7 @@ export default Portfolio;
 //                         {skill.name}
 //                       </h3>
 //                     </div>
-//                     <span className="skill-percentage" style={{
+//                     <span className="skill-percentage" style={{ 
 //                       fontSize: '20px',
 //                       fontWeight: 700,
 //                       color: 'var(--accent-primary)'
@@ -6006,7 +4915,7 @@ export default Portfolio;
 //                       {skill.level}%
 //                     </span>
 //                   </div>
-
+                  
 //                   <div style={{
 //                     width: '100%',
 //                     height: '12px',
@@ -6015,7 +4924,7 @@ export default Portfolio;
 //                     overflow: 'hidden',
 //                     border: '1px solid var(--border-color)'
 //                   }}>
-//                     <div
+//                     <div 
 //                       className="skill-bar"
 //                       style={{
 //                         width: `${skill.level}%`,
@@ -6035,8 +4944,8 @@ export default Portfolio;
 //         {/* Contact Section */}
 //         {activeTab === 'contact' && (
 //           <div style={{ animation: 'fadeIn 0.5s ease-in' }}>
-//             <h2 className="contact-title" style={{
-//               fontSize: '48px',
+//             <h2 className="contact-title" style={{ 
+//               fontSize: '48px', 
 //               marginBottom: '32px',
 //               fontFamily: '"Orbitron", monospace',
 //               color: 'var(--accent-primary)',
@@ -6046,35 +4955,35 @@ export default Portfolio;
 //             }}>
 //               Get In Touch
 //             </h2>
-
-//             <div className="glass-effect contact-container" style={{
-//               padding: '60px',
+            
+//             <div className="glass-effect contact-container" style={{ 
+//               padding: '60px', 
 //               borderRadius: '16px',
 //               maxWidth: '800px',
 //               margin: '0 auto',
 //               textAlign: 'center'
 //             }}>
-//               <Mail className="contact-icon" size={64} style={{
+//               <Mail className="contact-icon" size={64} style={{ 
 //                 color: 'var(--accent-primary)',
 //                 marginBottom: '32px'
 //               }} />
-
-//               <p className="contact-description" style={{
+              
+//               <p className="contact-description" style={{ 
 //                 fontSize: '20px',
 //                 color: 'var(--text-secondary)',
 //                 marginBottom: '48px',
 //                 lineHeight: '1.8'
 //               }}>
-//                 Always open to collaborating with those who share the vision of creating technology
+//                 Always open to collaborating with those who share the vision of creating technology 
 //                 that empowers people — not distracts them.
 //               </p>
-
-//               <div style={{
+              
+//               <div style={{ 
 //                 display: 'grid',
 //                 gap: '24px',
 //                 marginTop: '48px'
 //               }}>
-//                 <a
+//                 <a 
 //                   href="mailto:qwerify.ceo@gmail.com"
 //                   className="neon-border tech-card contact-link"
 //                   style={{
@@ -6094,8 +5003,8 @@ export default Portfolio;
 //                   <Mail size={28} />
 //                   <span>Email: qwerify.ceo@gmail.com</span>
 //                 </a>
-
-//                 <a
+                
+//                 <a 
 //                   href="https://github.com/Arezki-Cherfouh"
 //                   target="_blank"
 //                   rel="noopener noreferrer"
@@ -6117,8 +5026,8 @@ export default Portfolio;
 //                   <Github size={28} />
 //                   <span>GitHub: @Arezki-Cherfouh</span>
 //                 </a>
-
-//                 <a
+                
+//                 <a 
 //                   href="https://www.linkedin.com/in/arezki-cherfouh"
 //                   target="_blank"
 //                   rel="noopener noreferrer"
@@ -6140,8 +5049,8 @@ export default Portfolio;
 //                   <Linkedin size={28} />
 //                   <span>LinkedIn: Arezki Cherfouh</span>
 //                 </a>
-
-//                 <a
+                
+//                 <a 
 //                   href="https://qwerify.vercel.app"
 //                   target="_blank"
 //                   rel="noopener noreferrer"
@@ -6164,7 +5073,7 @@ export default Portfolio;
 //                   <span>Qwerify: qwerify.vercel.app</span>
 //                 </a>
 
-//                 <a
+//                 <a 
 //                   href="https://qwerify.vercel.app/profiles?user=1"
 //                   target="_blank"
 //                   rel="noopener noreferrer"
@@ -6193,20 +5102,20 @@ export default Portfolio;
 //       </main>
 
 //       {/* Footer */}
-//       <footer style={{
+//       <footer style={{ 
 //         borderTop: '1px solid var(--border-color)',
 //         padding: '40px 24px',
 //         textAlign: 'center',
 //         background: 'var(--bg-secondary)',
 //         width: '100%'
 //       }}>
-//         <p className="footer-text" style={{
+//         <p className="footer-text" style={{ 
 //           color: 'var(--text-secondary)',
 //           fontSize: '16px'
 //         }}>
 //           © {new Date().getFullYear()} Arezki Cherfouh. Built with React & Tailwind CSS.
 //         </p>
-//         <p className="footer-subtext" style={{
+//         <p className="footer-subtext" style={{ 
 //           color: 'var(--text-secondary)',
 //           fontSize: '14px',
 //           marginTop: '8px'
