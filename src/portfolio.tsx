@@ -245,7 +245,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = 'about' }) => {
                 AREZKI CHERFOUH
               </h1>
               <p className="main-subtitle cursor-pointer" style={{ fontSize: '24px', color: 'var(--text-secondary)', marginBottom: '24px', fontWeight: 600, userSelect: 'none' }}>
-                Founder & CEO of Qwerify | Software Engineer | AI Enthusiast
+                Founder @ Qwerify | SWE | AI & Tech Builder
               </p>
               <div className="social-links" style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '32px' }}>
                 <a href="https://github.com/Arezki-Cherfouh" target="_blank" rel="noopener noreferrer" className="neon-border social-link cursor-pointer" style={{ padding: '12px 24px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'var(--text-primary)', transition: 'all 0.3s ease', background: 'var(--bg-secondary)' }}>
@@ -265,20 +265,33 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = 'about' }) => {
                 <Sparkles size={28} style={{ display: 'inline', marginRight: '12px' }} />About Me
               </h2>
               <div className="about-text" style={{ fontSize: '18px', lineHeight: '1.8', color: 'var(--text-secondary)' }}>
-                <p style={{ marginBottom: '16px' }}>I'm Arezki Cherfouh, a student developer and the <strong style={{ color: 'var(--accent-primary)' }}>Founder & CEO of Qwerify</strong>, an independent tech project I started on July 19, 2025 to rethink how people connect and interact through technology.</p>
-                <p style={{ marginBottom: '16px' }}>Born on September 07, 2009 and passionate about AI and innovation. Qwerify is currently in development — not yet a registered company — but it represents my long-term vision of building a global technology brand that expands beyond communication into AI-driven systems, productivity tools, and scalable digital experiences that <strong style={{ color: 'var(--accent-primary)' }}>help people without distraction</strong>.</p>
-                <p style={{ marginBottom: '16px' }}>I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, C++, JavaScript/TypeScript, FastAPI, Node.js, SQL (PostgreSQL), ReactJS/React Native, HTML/CSS, Tailwind CSS & Bootstrap</strong>, with growing experience in system design and AI.</p>
-                <p style={{ marginBottom: '16px' }}>Through Qwerify, I've gained practical experience in full-stack development, real-time communication, secure authentication, and infrastructure scalability.</p>
-                <p>My long-term goal is to become a <strong style={{ color: 'var(--accent-primary)' }}>world-class AI engineer and CEO</strong>, and to grow Qwerify into a global company that competes with leading tech innovators — guided by the principles of privacy, focus, and human-centered design.</p>
+                <p style={{ marginBottom: '16px' }}>
+                  I'm Arezki Cherfouh, a student developer passionate about <strong style={{ color: 'var(--accent-primary)' }}>AI engineering, systems architecture, and innovation</strong>. Born in September 2009, my journey is driven by a long-term goal to become a world-class AI engineer and technology leader, building software systems that prioritize human focus, performance, and scalability.
+                </p>
+                <p style={{ marginBottom: '16px' }}>
+                  As a self-driven Software AI Engineer, I specialize in <strong style={{ color: 'var(--accent-primary)' }}>Python, C++, JavaScript/TypeScript, FastAPI, Node.js, SQL (PostgreSQL), and ReactJS/React Native</strong>, with hands-on experience spanning network architectures, intelligence-driven backends, and full-stack software initiatives.
+                </p>
+                <p style={{ marginBottom: '16px' }}>
+                  A major milestone in my track record is <strong style={{ color: 'var(--accent-primary)' }}>Qwerify</strong>, an independent technology initiative I launched on July 19, 2025. Through Qwerify, I architected and built a multi-platform ecosystem designed around privacy and zero-distraction frameworks—including an AI assistant, real-time communication networks with voice/video calling, and interactive embedded gaming environments.
+                </p>
+                <p>
+                  My backend experience includes training and fine-tuning specialized LLM interfaces, implementing low-latency real-time synchronization pipelines, microservices, and secure authentication workflows.
+                </p>
               </div>
             </div>
-
+            
             <div className="glass-effect about-section" style={{ padding: '40px', borderRadius: '16px' }}>
               <h3 className="current-focus-title cursor-pointer" style={{ fontSize: '28px', marginBottom: '24px', color: 'var(--accent-primary)', fontFamily: '"Orbitron", monospace', userSelect: 'none' }}>Current Focus</h3>
               <ul className="current-focus-list" style={{ listStyle: 'none', fontSize: '18px', lineHeight: '2', color: 'var(--text-secondary)' }}>
-                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>Strengthening my knowledge in data structures, algorithms, and system design for big tech opportunities</li>
-                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>Expanding Qwerify with AI features and mobile development</li>
-                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>Building a professional portfolio on GitHub and connecting with engineers, founders, and innovators worldwide</li>
+                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>
+                  Mastering advanced Data Structures, Algorithms, System Design, and AI-integrated ecosystems
+                </li>
+                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>
+                  Expanding data-heavy backends, LLM interfaces, and low-latency real-time pipelines
+                </li>
+                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'start' }}>
+                  Pursuing software engineering roles, AI/ML internships, and technical collaborations with global innovators
+                </li>
               </ul>
             </div>
           </div>
