@@ -35,7 +35,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ initialTab = 'about' }) => {
         const response = await fetch('https://api.github.com/users/Arezki-Cherfouh/repos?per_page=100&sort=updated');
         const data = await response.json();
         setRepos(data);
-        console.log(data.map(r => `${r.name} (${r.language}): ${r.html_url}\n${r.description}`).join('\n\n'));
+        console.log(data.map((r: any) => `${r.name} (${r.language}): ${r.html_url}\n${r.description}`).join('\n\n'));
       } catch (error) {
         console.error('Error fetching repos:', error);
         setRepos([
